@@ -2,73 +2,1587 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>StudyFlow</title>
+
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f5f6fb;color:#171923;padding-bottom:75px}.app{max-width:720px;margin:auto}header{background:#fff;padding:22px 18px;border-bottom:1px solid #e7e7ed}.logo{font-size:25px;font-weight:800}.logo b{color:#635bff}.tag{color:#777;margin-top:5px}main{padding:18px}.screen{display:none}.screen.active{display:block}h1{font-size:25px;margin:5px 0}h2{font-size:19px;margin:8px 0}.muted{color:#737887}.card{background:#fff;border-radius:18px;padding:17px;margin:14px 0;box-shadow:0 3px 14px #0000000b}.priority{border-left:5px solid #635bff}button{border:0;border-radius:12px;padding:12px 15px;font-weight:700;font-size:14px;cursor:pointer;margin-top:9px}.primary{background:#635bff;color:#fff;width:100%}.secondary{background:#eeeefe;color:#5149c9}.row{display:flex;justify-content:space-between;align-items:center;gap:10px}.topic{padding:13px 0;border-bottom:1px solid #eee}.badge{padding:4px 8px;border-radius:15px;font-size:11px;font-weight:700}.strong{background:#e1f7e9;color:#168043}.dev{background:#fff2cc;color:#8a6500}.needs{background:#ffe2e2;color:#b92d2d}.progress{height:8px;background:#e8e9ef;border-radius:9px;overflow:hidden;margin:10px 0}.progress i{display:block;height:100%;background:#635bff;width:60%}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.time{background:#fff;border:2px solid #e5e5ed;width:100%}textarea{width:100%;min-height:130px;padding:12px;border:1px solid #ddd;border-radius:12px;font-size:15px;margin-top:10px}.nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #ddd;display:flex;justify-content:space-around;padding:8px;z-index:9}.nav button{background:none;color:#777;margin:0;padding:6px}.nav button.active{color:#635bff}.hidden{display:none}.stat{padding:15px;background:#fff;border-radius:15px}.stat strong{font-size:24px;display:block}.notice{background:#f0efff;color:#4038a7;padding:12px;border-radius:12px;margin-top:12px}
+*{box-sizing:border-box}
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:#f5f6fb;
+color:#171923;
+padding-bottom:78px
+}
+.app{max-width:760px;margin:auto}
+
+header{
+background:#fff;
+padding:20px 18px;
+border-bottom:1px solid #e7e7ed;
+position:sticky;
+top:0;
+z-index:5
+}
+
+.logo{font-size:25px;font-weight:800}
+.logo b{color:#635bff}
+.tag{color:#777;margin-top:5px}
+
+main{padding:18px}
+
+.screen{display:none}
+.screen.active{display:block}
+
+h1{font-size:25px;margin:5px 0 8px}
+h2{font-size:19px;margin:8px 0}
+.muted{color:#737887}
+
+.card{
+background:#fff;
+border-radius:18px;
+padding:17px;
+margin:14px 0;
+box-shadow:0 3px 14px #0000000b
+}
+
+.priority{border-left:5px solid #635bff}
+
+.row{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px
+}
+
+button{
+border:0;
+border-radius:12px;
+padding:12px 15px;
+font-weight:700;
+font-size:14px;
+cursor:pointer;
+margin-top:9px
+}
+
+.primary{
+background:#635bff;
+color:#fff;
+width:100%
+}
+
+.secondary{
+background:#eeeefe;
+color:#5149c9
+}
+
+.danger{
+background:#ffe7e7;
+color:#b52b2b
+}
+
+.wide{width:100%}
+
+.stat{
+padding:15px;
+background:#fff;
+border-radius:15px
+}
+
+.stat strong{
+font-size:24px;
+display:block
+}
+
+.progress{
+height:8px;
+background:#e8e9ef;
+border-radius:9px;
+overflow:hidden;
+margin:10px 0
+}
+
+.progress i{
+display:block;
+height:100%;
+background:#635bff;
+width:60%
+}
+
+.topic{
+padding:13px 0;
+border-bottom:1px solid #eee
+}
+
+.badge{
+padding:4px 8px;
+border-radius:15px;
+font-size:11px;
+font-weight:700
+}
+
+.strong{
+background:#e1f7e9;
+color:#168043
+}
+
+.dev{
+background:#fff2cc;
+color:#8a6500
+}
+
+.needs{
+background:#ffe2e2;
+color:#b92d2d
+}
+
+input,textarea,select{
+width:100%;
+padding:13px;
+border:1px solid #dcdde5;
+border-radius:12px;
+font-size:15px;
+margin:7px 0 10px;
+background:#fff
+}
+
+label{
+font-size:13px;
+font-weight:700;
+color:#555
+}
+
+.course-item{
+padding:15px;
+border:1px solid #eee;
+border-radius:15px;
+margin:10px 0;
+background:#fff
+}
+
+.time{
+background:#fff;
+border:2px solid #e5e5ed;
+width:100%;
+min-height:58px
+}
+
+.notice{
+background:#f0efff;
+color:#4038a7;
+padding:12px;
+border-radius:12px;
+margin-top:12px
+}
+
+.empty{
+text-align:center;
+padding:25px;
+color:#777
+}
+
+.nav{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+background:#fff;
+border-top:1px solid #ddd;
+display:flex;
+justify-content:space-around;
+padding:8px;
+z-index:9
+}
+
+.nav button{
+background:none;
+color:#777;
+margin:0;
+padding:6px
+}
+
+.nav button.active{color:#635bff}
+
+.hidden{display:none}
+.back{margin-bottom:8px}
 </style>
 </head>
+
 <body>
+
 <div class="app">
-<header><div class="logo">Study<b>Flow</b></div><div class="tag">Study smarter. Live your university life.</div></header>
+
+<header>
+<div class="logo">Study<b>Flow</b></div>
+<div class="tag">Study smarter. Live your university life.</div>
+</header>
+
 <main>
+
+<!-- HOME -->
+
 <section id="home" class="screen active">
-<h1>Good evening 👋</h1><p class="muted">Here's what matters today.</p>
-<div class="card priority"><small class="muted">YOUR PRIORITY</small><h2>PET 101 — Permeability</h2><p>You're developing this topic. A focused session is your best next step.</p><button class="primary" onclick="go('study')">Start 15-minute session</button></div>
-<div class="grid"><div class="stat"><strong>2/4</strong><span class="muted">Today's goals</span></div><div class="stat"><strong>35m</strong><span class="muted">Study time</span></div></div>
-<div class="card"><h2>My Courses</h2><div class="row"><div><b>PET 101</b><br><span class="muted">Introduction to Petroleum Engineering</span></div><button class="secondary" onclick="go('course')">Open</button></div><hr><div class="row"><div><b>MTH 101</b><br><span class="muted">Mathematics</span></div><button class="secondary" onclick="go('course')">Open</button></div></div>
-<div class="card"><h2>Short on time?</h2><p class="muted">Let StudyFlow choose your highest-value task.</p><button class="primary" onclick="go('time')">I have limited time</button></div>
+
+<h1 id="greeting">Good evening 👋</h1>
+
+<p class="muted">
+Here's what matters today.
+</p>
+
+<div id="homePriority" class="card priority"></div>
+
+<div class="grid">
+
+<div class="stat">
+<strong id="goalCount">0/3</strong>
+<span class="muted">Today's goals</span>
+</div>
+
+<div class="stat">
+<strong id="courseCount">0</strong>
+<span class="muted">Courses</span>
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="row">
+<h2>My Courses</h2>
+
+<button class="secondary" onclick="go('courses')">
+View all
+</button>
+
+</div>
+
+<div id="homeCourses"></div>
+
+</div>
+
+<div class="card">
+
+<h2>Short on time?</h2>
+
+<p class="muted">
+Tell StudyFlow how much time you have and we'll pick a useful task.
+</p>
+
+<button class="primary" onclick="go('time')">
+I have limited time
+</button>
+
+</div>
+
 </section>
+
+
+<!-- COURSES -->
 
 <section id="courses" class="screen">
-<h1>My Courses</h1><p class="muted">Everything you're studying.</p>
-<div class="card"><div class="row"><div><h2>PET 101</h2><span class="muted">Introduction to Petroleum Engineering</span></div><button class="secondary" onclick="go('course')">Open</button></div></div>
-<div class="card"><div class="row"><div><h2>MTH 101</h2><span class="muted">Mathematics</span></div><button class="secondary" onclick="go('course')">Open</button></div></div>
-<div class="card"><div class="row"><div><h2>PHY 101</h2><span class="muted">Physics</span></div><button class="secondary" onclick="go('course')">Open</button></div></div>
-<button class="primary" onclick="addCourse()">+ Add Course</button>
+
+<button class="secondary back" onclick="go('home')">
+← Home
+</button>
+
+<h1>My Courses</h1>
+
+<p class="muted">
+Build your semester one course at a time.
+</p>
+
+<div id="courseList"></div>
+
+<button class="primary" onclick="openAddCourse()">
++ Add Course
+</button>
+
 </section>
+
+
+<!-- ADD COURSE -->
+
+<section id="addCourse" class="screen">
+
+<button class="secondary back" onclick="go('courses')">
+← Back
+</button>
+
+<h1>Add a Course</h1>
+
+<p class="muted">
+Start with the basics. You can add topics afterward.
+</p>
+
+<div class="card">
+
+<label>Course code</label>
+
+<input
+id="newCode"
+placeholder="e.g. PET 101"
+>
+
+<label>Course title</label>
+
+<input
+id="newTitle"
+placeholder="e.g. Introduction to Petroleum Engineering"
+>
+
+<label>Semester</label>
+
+<select id="newSemester">
+
+<option>
+First Semester
+</option>
+
+<option>
+Second Semester
+</option>
+
+</select>
+
+<button class="primary" onclick="saveCourse()">
+Save Course
+</button>
+
+</div>
+
+</section>
+
+
+<!-- COURSE -->
 
 <section id="course" class="screen">
-<button class="secondary" onclick="go('courses')">← Back</button><h1 style="margin-top:15px">PET 101</h1><p class="muted">Introduction to Petroleum Engineering</p>
-<div class="card"><h2>Topics</h2><div class="topic">Petroleum Basics <span class="badge strong">Strong</span></div><div class="topic">Exploration <span class="badge strong">Strong</span></div><div class="topic">Reservoirs <span class="badge dev">Developing</span></div><div class="topic">Permeability <span class="badge needs">Needs attention</span></div><div class="topic">Drilling <span class="badge dev">Developing</span></div></div>
-<div class="card"><h2>Course Progress</h2><div class="progress"><i></i></div><p class="muted">Focus next on Permeability.</p></div>
-<button class="primary" onclick="go('study')">Start studying</button><button class="primary" onclick="go('material')">+ Add learning material</button>
+
+<button class="secondary back" onclick="go('courses')">
+← Courses
+</button>
+
+<div id="courseHeader"></div>
+
+<div id="topicBox"></div>
+
+<button class="primary" onclick="openAddTopic()">
++ Add Topic
+</button>
+
+<div class="card">
+
+<h2>Learning material</h2>
+
+<p class="muted">
+For this prototype, paste lecture notes and turn them into a learning session.
+</p>
+
+<button class="secondary wide" onclick="go('material')">
++ Add notes/material
+</button>
+
+</div>
+
 </section>
+
+
+<!-- ADD TOPIC -->
+
+<section id="addTopic" class="screen">
+
+<button class="secondary back" onclick="openCurrentCourse()">
+← Back
+</button>
+
+<h1>Add a Topic</h1>
+
+<div class="card">
+
+<label>Topic name</label>
+
+<input
+id="newTopic"
+placeholder="e.g. Darcy's Law"
+>
+
+<label>Current understanding</label>
+
+<select id="newStatus">
+
+<option value="needs">
+Needs attention
+</option>
+
+<option value="developing">
+Developing
+</option>
+
+<option value="strong">
+Strong
+</option>
+
+</select>
+
+<button class="primary" onclick="saveTopic()">
+Add Topic
+</button>
+
+</div>
+
+</section>
+
+
+<!-- MATERIAL -->
 
 <section id="material" class="screen">
-<button class="secondary" onclick="go('course')">← Back</button><h1 style="margin-top:15px">Add Material</h1><p class="muted">Turn material into something you can learn from.</p>
-<div class="card"><h2>Material type</h2><button class="secondary" onclick="makePack('PDF')">📄 PDF</button> <button class="secondary" onclick="makePack('Image')">🖼️ Image</button> <button class="secondary" onclick="makePack('Slides')">📊 Slides</button><h2 style="margin-top:20px">Or paste notes</h2><textarea id="notes" placeholder="Paste lecture notes here..."></textarea><button class="primary" onclick="makePack('Notes')">Create Learning Pack</button></div>
+
+<button class="secondary back" onclick="openCurrentCourse()">
+← Back
+</button>
+
+<h1>Add Learning Material</h1>
+
+<p class="muted">
+Paste a useful section of your lecture notes below.
+</p>
+
+<div class="card">
+
+<label>Choose topic</label>
+
+<select id="materialTopic"></select>
+
+<label>Lecture notes</label>
+
+<textarea
+id="notes"
+rows="9"
+placeholder="Paste your lecture notes here..."
+></textarea>
+
+<button
+class="primary"
+onclick="createSessionFromNotes()"
+>
+Create Study Session
+</button>
+
+</div>
+
 </section>
 
-<section id="learning" class="screen">
-<h1>Learning Pack</h1><p class="muted">PET 101 — Reservoirs</p><div class="card"><h2>What you need to understand</h2><div class="topic">1. What a petroleum reservoir is</div><div class="topic">2. Reservoir rock characteristics</div><div class="topic">3. Porosity</div><div class="topic">4. Permeability</div><div class="topic">5. Reservoir fluids</div><div class="topic">6. How properties affect production</div></div><div class="card"><b>Priority:</b> High<br><b>Estimated time:</b> 35 minutes<br><b>Prerequisite:</b> Basic petroleum concepts</div><button class="primary" onclick="go('study')">Start Study Mode</button>
-</section>
+
+<!-- STUDY MODE -->
 
 <section id="study" class="screen">
-<h1>Study Mode</h1><p class="muted">PET 101 • Permeability</p><div class="card"><h2>What is permeability?</h2><p>Permeability describes how easily fluids can move through connected spaces within a rock.</p><p>In petroleum engineering, it matters because it affects how easily reservoir fluids can flow toward a production well.</p></div><div class="card"><h2>Think about it</h2><p>Why would a reservoir rock with higher permeability generally allow fluids to move more easily?</p><button class="secondary" onclick="explain()">Explain differently</button><button class="secondary" onclick="go('practice')">Check my understanding</button><p id="different" class="notice"></p></div>
+
+<button class="secondary back" onclick="openCurrentCourse()">
+← Back
+</button>
+
+<div id="studyHeader"></div>
+
+<div class="card">
+
+<h2>Understand</h2>
+
+<p id="studyExplanation"></p>
+
+<button
+class="secondary"
+onclick="explainAgain()"
+>
+Explain differently
+</button>
+
+</div>
+
+
+<div class="card">
+
+<h2>Active recall</h2>
+
+<p id="studyQuestion"></p>
+
+<textarea
+id="answer"
+rows="5"
+placeholder="Answer without looking at your notes..."
+></textarea>
+
+<button
+class="primary"
+onclick="checkAnswer()"
+>
+Check my understanding
+</button>
+
+<div
+id="feedback"
+class="notice hidden"
+></div>
+
+</div>
+
 </section>
 
-<section id="practice" class="screen">
-<h1>Practice</h1><p class="muted">Let's see what you actually understand.</p><div class="card"><h2>Question</h2><p>In your own words, explain why permeability matters when producing petroleum from a reservoir.</p><textarea id="answer" placeholder="Write your answer here..."></textarea><button class="primary" onclick="check()">Submit answer</button><div id="feedback" class="notice hidden"></div></div>
-</section>
+
+<!-- TIME -->
 
 <section id="time" class="screen">
-<h1>How much time do you have?</h1><p class="muted">StudyFlow will choose a high-value task.</p><div class="grid"><button class="time" onclick="recommend(5)">5 minutes</button><button class="time" onclick="recommend(10)">10 minutes</button><button class="time" onclick="recommend(15)">15 minutes</button><button class="time" onclick="recommend(20)">20 minutes</button><button class="time" onclick="recommend(30)">30+ minutes</button></div><div id="rec"></div>
+
+<button class="secondary back" onclick="go('home')">
+← Home
+</button>
+
+<h1>How much time do you have?</h1>
+
+<p class="muted">
+We'll choose the highest-value task from your topics.
+</p>
+
+<div class="grid">
+
+<button class="time" onclick="recommend(5)">
+5 min
+</button>
+
+<button class="time" onclick="recommend(10)">
+10 min
+</button>
+
+<button class="time" onclick="recommend(15)">
+15 min
+</button>
+
+<button class="time" onclick="recommend(20)">
+20 min
+</button>
+
+<button class="time" onclick="recommend(30)">
+30+ min
+</button>
+
+</div>
+
+<div id="rec"></div>
+
 </section>
 
-<section id="plan" class="screen"><h1>Today's Plan</h1><p class="muted">A focused plan beats random studying.</p><div class="card"><h2>Academic Mission</h2><div class="topic">15 min — Permeability</div><div class="topic">10 min — Practice questions</div><div class="topic">10 min — Review</div><button class="primary" onclick="go('study')">Start mission</button></div></section>
 
-<section id="profile" class="screen"><h1>Profile</h1><div class="card"><h2>Exam Readiness</h2><p>PET 101</p><div class="progress"><i style="width:65%"></i></div><p class="muted">Developing — focus on Permeability and Drilling next.</p></div></section>
-</main>
-<nav class="nav"><button onclick="go('home')">🏠<br>Home</button><button onclick="go('courses')">📚<br>Courses</button><button onclick="go('plan')">🗓️<br>Plan</button><button onclick="go('profile')">👤<br>Profile</button></nav>
+<!-- PLAN -->
+
+<section id="plan" class="screen">
+
+<h1>Today's Plan</h1>
+
+<p class="muted">
+A focused plan beats random studying.
+</p>
+
+<div id="planBox"></div>
+
+</section>
+
+
+<!-- PROFILE -->
+
+<section id="profile" class="screen">
+
+<h1>Profile</h1>
+
+<div class="card">
+
+<h2>StudyFlow prototype</h2>
+
+<p class="muted">
+Your courses and topic progress are stored on this device.
+</p>
+
+<button
+class="danger wide"
+onclick="resetData()"
+>
+Reset demo data
+</button>
+
 </div>
+
+</section>
+
+</main>
+
+
+<!-- NAVIGATION -->
+
+<nav class="nav">
+
+<button onclick="go('home')">
+🏠<br>
+Home
+</button>
+
+<button onclick="go('courses')">
+📚<br>
+Courses
+</button>
+
+<button onclick="go('plan')">
+🗓️<br>
+Plan
+</button>
+
+<button onclick="go('profile')">
+👤<br>
+Profile
+</button>
+
+</nav>
+
+</div>
+
+
 <script>
-function go(id){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');scrollTo(0,0)}
-function makePack(type){alert(type+' selected. Prototype processing complete.');go('learning')}
-function explain(){document.getElementById('different').textContent='Think of permeability as how easily fluid can pass through connected pathways in rock. More connected pathways generally mean easier movement.'}
-function check(){let a=document.getElementById('answer').value.trim(),f=document.getElementById('feedback');f.classList.remove('hidden');f.innerHTML=a.length<20?'<b>Keep going.</b><br>Explain both fluid movement and why that matters during production.':'<b>Good attempt 👏</b><br>Connect permeability to movement of reservoir fluids toward production wells.'}
-function recommend(m){let t=m<=5?'Review the definition of permeability and explain it in your own words.':m<=10?'Review permeability for 5 minutes, then answer one practice question.':m<=15?'Study permeability for 8 minutes and practice for 7 minutes.':'Permeability review — 12 min; practice questions — 8 min; quick review with remaining time.';document.getElementById('rec').innerHTML='<div class="card"><h2>Your '+m+'-minute mission</h2><p>'+t+'</p><button class="primary" onclick="go(\'study\')">Start</button></div>'}
-function addCourse(){let n=prompt('Enter course code:');if(n)alert(n.toUpperCase()+' added to the prototype.')}
+
+const KEY='studyflow_v2';
+
+let data=JSON.parse(
+localStorage.getItem(KEY)||'null'
+)||{
+
+courses:[
+
+{
+id:1,
+code:'PET 101',
+title:'Introduction to Petroleum Engineering',
+semester:'First Semester',
+
+topics:[
+
+{
+name:'Petroleum Basics',
+status:'strong'
+},
+
+{
+name:'Exploration',
+status:'strong'
+},
+
+{
+name:'Reservoirs',
+status:'developing'
+},
+
+{
+name:'Permeability',
+status:'needs'
+},
+
+{
+name:'Drilling',
+status:'developing'
+}
+
+]
+
+},
+
+{
+id:2,
+code:'MTH 101',
+title:'Mathematics',
+semester:'First Semester',
+topics:[]
+},
+
+{
+id:3,
+code:'PHY 101',
+title:'Physics',
+semester:'First Semester',
+topics:[]
+}
+
+],
+
+sessions:0
+
+};
+
+
+let currentCourseId=
+data.courses[0]?.id||null;
+
+let currentTopic=null;
+
+
+function persist(){
+
+localStorage.setItem(
+KEY,
+JSON.stringify(data)
+);
+
+}
+
+
+function go(id){
+
+document
+.querySelectorAll('.screen')
+.forEach(x=>x.classList.remove('active'));
+
+document
+.getElementById(id)
+.classList.add('active');
+
+if(id==='home')
+renderHome();
+
+if(id==='courses')
+renderCourses();
+
+if(id==='plan')
+renderPlan();
+
+scrollTo(0,0);
+
+}
+
+
+function course(){
+
+return data.courses.find(
+c=>c.id===currentCourseId
+);
+
+}
+
+
+function statusLabel(s){
+
+return s==='strong'
+
+? '<span class="badge strong">Strong</span>'
+
+: s==='developing'
+
+? '<span class="badge dev">Developing</span>'
+
+: '<span class="badge needs">Needs attention</span>';
+
+}
+
+
+function priorityTopic(){
+
+for(
+const c of data.courses
+){
+
+const t=c.topics.find(
+x=>x.status==='needs'
+);
+
+if(t)
+return {c,t};
+
+}
+
+
+for(
+const c of data.courses
+){
+
+const t=c.topics.find(
+x=>x.status==='developing'
+);
+
+if(t)
+return {c,t};
+
+}
+
+return null;
+
+}
+
+
+function renderHome(){
+
+document
+.getElementById('courseCount')
+.textContent=data.courses.length;
+
+
+const p=priorityTopic();
+
+const box=
+document.getElementById('homePriority');
+
+
+if(p){
+
+box.innerHTML=
+
+'<small class="muted">YOUR PRIORITY</small>'+
+'<h2>'+p.c.code+' — '+p.t.name+'</h2>'+
+'<p>Highest-value topic based on your current understanding.</p>'+
+'<button class="primary" onclick="startTopic('+p.c.id+',\''+
+escapeJs(p.t.name)+
+'\')">Start focused session</button>';
+
+}
+
+else{
+
+box.innerHTML=
+
+'<h2>You're ready to build your study system 🎯</h2>'+
+'<p>Add topics to your courses and StudyFlow will help you choose what to study next.</p>'+
+'<button class="primary" onclick="go(\'courses\')">Set up courses</button>';
+
+}
+
+
+document
+.getElementById('goalCount')
+.textContent=
+Math.min(data.sessions,3)+'/3';
+
+
+document
+.getElementById('homeCourses')
+.innerHTML=
+
+data.courses
+.slice(0,3)
+.map(c=>
+
+'<div class="course-item">'+
+
+'<div class="row">'+
+
+'<div>'+
+'<b>'+c.code+'</b><br>'+
+'<span class="muted">'+c.title+'</span>'+
+'</div>'+
+
+'<button class="secondary" onclick="openCourse('+c.id+')">'+
+'Open'+
+'</button>'+
+
+'</div>'+
+
+'</div>'
+
+)
+.join('');
+
+}
+
+
+function renderCourses(){
+
+const el=
+document.getElementById('courseList');
+
+
+el.innerHTML=
+
+data.courses.length
+
+?
+
+data.courses.map(c=>
+
+'<div class="course-item">'+
+
+'<div class="row">'+
+
+'<div>'+
+
+'<h2>'+c.code+'</h2>'+
+
+'<span class="muted">'+
+c.title+
+'</span>'+
+
+'<br>'+
+
+'<small>'+
+c.topics.length+
+' topic(s)'+
+'</small>'+
+
+'</div>'+
+
+'<button class="secondary" onclick="openCourse('+c.id+')">'+
+'Open'+
+'</button>'+
+
+'</div>'+
+
+'</div>'
+
+).join('')
+
+:
+
+'<div class="empty">No courses yet. Add your first course.</div>';
+
+}
+
+
+function openCourse(id){
+
+currentCourseId=id;
+
+renderCourse();
+
+go('course');
+
+}
+
+
+function openCurrentCourse(){
+
+renderCourse();
+
+go('course');
+
+}
+
+
+function renderCourse(){
+
+const c=course();
+
+if(!c)
+return;
+
+
+document
+.getElementById('courseHeader')
+.innerHTML=
+
+'<h1>'+c.code+'</h1>'+
+'<p class="muted">'+c.title+'</p>';
+
+
+const strong=
+c.topics.filter(
+t=>t.status==='strong'
+).length;
+
+
+const pct=
+c.topics.length
+?
+Math.round(
+strong/c.topics.length*100
+)
+:0;
+
+
+document
+.getElementById('topicBox')
+.innerHTML=
+
+'<div class="card">'+
+
+'<h2>Topics</h2>'+
+
+(
+
+c.topics.length
+
+?
+
+c.topics.map(
+(t,i)=>
+
+'<div class="topic">'+
+
+'<div class="row">'+
+
+'<span>'+t.name+'</span>'+
+
+statusLabel(t.status)+
+
+'</div>'+
+
+'<button class="secondary" onclick="cycleStatus('+i+')">'+
+'Update status'+
+'</button>'+
+
+'<button class="secondary" onclick="startTopic('+c.id+',\''+
+escapeJs(t.name)+
+'\')">'+
+'Study'+
+'</button>'+
+
+'</div>'
+
+).join('')
+
+:
+
+'<div class="empty">No topics yet. Add your first topic.</div>'
+
+)+
+
+'</div>'+
+
+'<div class="card">'+
+
+'<h2>Course progress</h2>'+
+
+'<div class="progress">'+
+'<i style="width:'+pct+'%"></i>'+
+'</div>'+
+
+'<p class="muted">'+
+
+(
+
+c.topics.length
+
+?
+
+pct+'% of topics marked strong.'
+
+:
+
+'Add topics to begin tracking progress.'
+
+)+
+
+'</p>'+
+
+'</div>';
+
+}
+
+
+function openAddCourse(){
+
+document.getElementById('newCode').value='';
+
+document.getElementById('newTitle').value='';
+
+go('addCourse');
+
+}
+
+
+function saveCourse(){
+
+const code=
+document
+.getElementById('newCode')
+.value
+.trim()
+.toUpperCase();
+
+
+const title=
+document
+.getElementById('newTitle')
+.value
+.trim();
+
+
+const semester=
+document
+.getElementById('newSemester')
+.value;
+
+
+if(!code||!title){
+
+alert(
+'Please enter the course code and title.'
+);
+
+return;
+
+}
+
+
+const id=Date.now();
+
+
+data.courses.push({
+
+id,
+code,
+title,
+semester,
+topics:[]
+
+});
+
+
+currentCourseId=id;
+
+persist();
+
+renderCourse();
+
+go('course');
+
+}
+
+
+function openAddTopic(){
+
+document
+.getElementById('newTopic')
+.value='';
+
+go('addTopic');
+
+}
+
+
+function saveTopic(){
+
+const name=
+document
+.getElementById('newTopic')
+.value
+.trim();
+
+
+const status=
+document
+.getElementById('newStatus')
+.value;
+
+
+if(!name){
+
+alert(
+'Enter a topic name.'
+);
+
+return;
+
+}
+
+
+course()
+.topics
+.push({
+
+name,
+status
+
+});
+
+
+persist();
+
+renderCourse();
+
+go('course');
+
+}
+
+
+function cycleStatus(i){
+
+const t=
+course()
+.topics[i];
+
+
+t.status=
+t.status==='needs'
+
+?
+
+'developing'
+
+:
+
+t.status==='developing'
+
+?
+
+'strong'
+
+:
+
+'needs';
+
+
+persist();
+
+renderCourse();
+
+}
+
+
+function createSessionFromNotes(){
+
+const notes=
+document
+.getElementById('notes')
+.value
+.trim();
+
+
+if(!notes){
+
+alert(
+'Paste some lecture notes first.'
+);
+
+return;
+
+}
+
+
+currentTopic=
+course()
+.topics[
+Number(
+document
+.getElementById('materialTopic')
+.value
+)
+]?.name
+||'General review';
+
+
+startStudy(notes);
+
+}
+
+
+function startTopic(id,name){
+
+currentCourseId=id;
+
+currentTopic=name;
+
+startStudy('');
+
+}
+
+
+function startStudy(notes){
+
+const t=
+currentTopic
+||course().topics[0]?.name
+||'General review';
+
+
+document
+.getElementById('studyHeader')
+.innerHTML=
+
+'<h1>Study Mode</h1>'+
+'<p class="muted">'+
+course().code+
+' • '+
+t+
+'</p>';
+
+
+const lower=
+t.toLowerCase();
+
+
+let explanation=
+
+'Study the core idea, connect it to an example, then explain it without looking at your notes.';
+
+
+if(
+lower.includes('permeab')
+){
+
+explanation=
+
+'Permeability describes how easily fluids can move through connected spaces within a rock. In petroleum engineering, it matters because it affects how reservoir fluids flow toward a production well.';
+
+}
+
+
+if(notes){
+
+explanation=
+
+'Your notes are ready for active learning. First identify the main idea, then explain it in your own words, and finally test yourself without looking.';
+
+}
+
+
+document
+.getElementById('studyExplanation')
+.textContent=
+explanation;
+
+
+document
+.getElementById('studyQuestion')
+.textContent=
+
+'In your own words, explain the most important idea about '+
+t+
+' and why it matters.';
+
+
+document
+.getElementById('answer')
+.value='';
+
+
+document
+.getElementById('feedback')
+.classList.add('hidden');
+
+
+data.sessions++;
+
+persist();
+
+go('study');
+
+}
+
+
+function explainAgain(){
+
+document
+.getElementById('studyExplanation')
+.textContent=
+
+'Think about '+
+currentTopic+
+': what is it, how does it work, and why would a petroleum engineer need to understand it? Try explaining it as if you were teaching a classmate.';
+
+}
+
+
+function checkAnswer(){
+
+const a=
+document
+.getElementById('answer')
+.value
+.trim();
+
+
+const f=
+document
+.getElementById('feedback');
+
+
+f.classList.remove('hidden');
+
+
+f.innerHTML=
+
+a.length<30
+
+?
+
+'<b>Keep developing it.</b><br>Add what the concept means, how it works, and why it matters.'
+
+:
+
+'<b>Good attempt 👏</b><br>You explained the idea in your own words. Now compare your answer with your notes and add anything important you missed.';
+
+}
+
+
+function recommend(m){
+
+const p=priorityTopic();
+
+const r=
+document
+.getElementById('rec');
+
+
+if(!p){
+
+r.innerHTML=
+
+'<div class="card">'+
+
+'<h2>First, add some topics.</h2>'+
+
+'<button class="primary" onclick="go(\'courses\')">'+
+'Set up a course'+
+'</button>'+
+
+'</div>';
+
+return;
+
+}
+
+
+let task;
+
+
+if(m<=5){
+
+task=
+'Recall '+p.t.name+
+' from memory, then check your notes.';
+
+}
+
+else if(m<=10){
+
+task=
+'Review '+p.t.name+
+' for 5 minutes and answer one practice question.';
+
+}
+
+else if(m<=15){
+
+task=
+'8 min understand '+
+p.t.name+
+' + 7 min active recall.';
+
+}
+
+else{
+
+task=
+'12 min understand '+
+p.t.name+
+' + 8 min practice + quick review.';
+
+}
+
+
+r.innerHTML=
+
+'<div class="card">'+
+
+'<small class="muted">BEST NEXT TASK</small>'+
+
+'<h2>'+
+p.c.code+
+' — '+
+p.t.name+
+'</h2>'+
+
+'<p>'+
+task+
+'</p>'+
+
+'<p class="notice">'+
+'Why: this topic currently needs the most attention.'+
+'</p>'+
+
+'<button class="primary" onclick="startTopic('+p.c.id+',\''+
+escapeJs(p.t.name)+
+'\')">'+
+'Start'+
+'</button>'+
+
+'</div>';
+
+}
+
+
+function renderPlan(){
+
+const p=priorityTopic();
+
+
+document
+.getElementById('planBox')
+.innerHTML=
+
+p
+
+?
+
+'<div class="card">'+
+
+'<h2>Today\'s Academic Mission</h2>'+
+
+'<div class="topic">10 min — Understand '+
+p.t.name+
+'</div>'+
+
+'<div class="topic">10 min — Active recall</div>'+
+
+'<div class="topic">5 min — Review mistakes</div>'+
+
+'<button class="primary" onclick="startTopic('+p.c.id+',\''+
+escapeJs(p.t.name)+
+'\')">'+
+'Start mission'+
+'</button>'+
+
+'</div>'
+
+:
+
+'<div class="card">'+
+
+'<p>Add topics to generate a personalized plan.</p>'+
+
+'<button class="primary" onclick="go(\'courses\')">'+
+'Add topics'+
+'</button>'+
+
+'</div>';
+
+}
+
+
+function resetData(){
+
+if(
+confirm(
+'Reset the prototype data?'
+)
+){
+
+localStorage.removeItem(KEY);
+
+location.reload();
+
+}
+
+}
+
+
+function escapeJs(s){
+
+return String(s)
+.replace(/\\/g,'\\\\')
+.replace(/'/g,"\\'");
+
+}
+
+
+renderHome();
+
 </script>
+
 </body>
 </html>
