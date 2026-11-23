@@ -1,1 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>StudyFlow</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f5f6fb;color:#171923;padding-bottom:75px}.app{max-width:720px;margin:auto}header{background:#fff;padding:22px 18px;border-bottom:1px solid #e7e7ed}.logo{font-size:25px;font-weight:800}.logo b{color:#635bff}.tag{color:#777;margin-top:5px}main{padding:18px}.screen{display:none}.screen.active{display:block}h1{font-size:25px;margin:5px 0}h2{font-size:19px;margin:8px 0}.muted{color:#737887}.card{background:#fff;border-radius:18px;padding:17px;margin:14px 0;box-shadow:0 3px 14px #0000000b}.priority{border-left:5px solid #635bff}button{border:0;border-radius:12px;padding:12px 15px;font-weight:700;font-size:14px;cursor:pointer;margin-top:9px}.primary{background:#635bff;color:#fff;width:100%}.secondary{background:#eeeefe;color:#5149c9}.row{display:flex;justify-content:space-between;align-items:center;gap:10px}.topic{padding:13px 0;border-bottom:1px solid #eee}.badge{padding:4px 8px;border-radius:15px;font-size:11px;font-weight:700}.strong{background:#e1f7e9;color:#168043}.dev{background:#fff2cc;color:#8a6500}.needs{background:#ffe2e2;color:#b92d2d}.progress{height:8px;background:#e8e9ef;border-radius:9px;overflow:hidden;margin:10px 0}.progress i{display:block;height:100%;background:#635bff;width:60%}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.time{background:#fff;border:2px solid #e5e5ed;width:100%}textarea{width:100%;min-height:130px;padding:12px;border:1px solid #ddd;border-radius:12px;font-size:15px;margin-top:10px}.nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #ddd;display:flex;justify-content:space-around;padding:8px;z-index:9}.nav button{background:none;color:#777;margin:0;padding:6px}.nav button.active{color:#635bff}.hidden{display:none}.stat{padding:15px;background:#fff;border-radius:15px}.stat strong{font-size:24px;display:block}.notice{background:#f0efff;color:#4038a7;padding:12px;border-radius:12px;margin-top:12px}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="logo">Study<b>Flow</b></div><div class="tag">Study smarter. Live your university life.</div></header>
+<main>
+<section id="home" class="screen active">
+<h1>Good evening 👋</h1><p class="muted">Here's what matters today.</p>
+<div class="card priority"><small class="muted">YOUR PRIORITY</small><h2>PET 101 — Permeability</h2><p>You're developing this topic. A focused session is your best next step.</p><button class="primary" onclick="go('study')">Start 15-minute session</button></div>
+<div class="grid"><div class="stat"><strong>2/4</strong><span class="muted">Today's goals</span></div><div class="stat"><strong>35m</strong><span class="muted">Study time</span></div></div>
+<div class="card"><h2>My Courses</h2><div class="row"><div><b>PET 101</b><br><span class="muted">Introduction to Petroleum Engineering</span></div><button class="secondary" onclick="go('course')">Open</button></div><hr><div class="row"><div><b>MTH 101</b><br><span class="muted">Mathematics</span></div><button class="secondary" onclick="go('course')">Open</button></div></div>
+<div class="card"><h2>Short on time?</h2><p class="muted">Let StudyFlow choose your highest-value task.</p><button class="primary" onclick="go('time')">I have limited time</button></div>
+</section>
 
+<section id="courses" class="screen">
+<h1>My Courses</h1><p class="muted">Everything you're studying.</p>
+<div class="card"><div class="row"><div><h2>PET 101</h2><span class="muted">Introduction to Petroleum Engineering</span></div><button class="secondary" onclick="go('course')">Open</button></div></div>
+<div class="card"><div class="row"><div><h2>MTH 101</h2><span class="muted">Mathematics</span></div><button class="secondary" onclick="go('course')">Open</button></div></div>
+<div class="card"><div class="row"><div><h2>PHY 101</h2><span class="muted">Physics</span></div><button class="secondary" onclick="go('course')">Open</button></div></div>
+<button class="primary" onclick="addCourse()">+ Add Course</button>
+</section>
+
+<section id="course" class="screen">
+<button class="secondary" onclick="go('courses')">← Back</button><h1 style="margin-top:15px">PET 101</h1><p class="muted">Introduction to Petroleum Engineering</p>
+<div class="card"><h2>Topics</h2><div class="topic">Petroleum Basics <span class="badge strong">Strong</span></div><div class="topic">Exploration <span class="badge strong">Strong</span></div><div class="topic">Reservoirs <span class="badge dev">Developing</span></div><div class="topic">Permeability <span class="badge needs">Needs attention</span></div><div class="topic">Drilling <span class="badge dev">Developing</span></div></div>
+<div class="card"><h2>Course Progress</h2><div class="progress"><i></i></div><p class="muted">Focus next on Permeability.</p></div>
+<button class="primary" onclick="go('study')">Start studying</button><button class="primary" onclick="go('material')">+ Add learning material</button>
+</section>
+
+<section id="material" class="screen">
+<button class="secondary" onclick="go('course')">← Back</button><h1 style="margin-top:15px">Add Material</h1><p class="muted">Turn material into something you can learn from.</p>
+<div class="card"><h2>Material type</h2><button class="secondary" onclick="makePack('PDF')">📄 PDF</button> <button class="secondary" onclick="makePack('Image')">🖼️ Image</button> <button class="secondary" onclick="makePack('Slides')">📊 Slides</button><h2 style="margin-top:20px">Or paste notes</h2><textarea id="notes" placeholder="Paste lecture notes here..."></textarea><button class="primary" onclick="makePack('Notes')">Create Learning Pack</button></div>
+</section>
+
+<section id="learning" class="screen">
+<h1>Learning Pack</h1><p class="muted">PET 101 — Reservoirs</p><div class="card"><h2>What you need to understand</h2><div class="topic">1. What a petroleum reservoir is</div><div class="topic">2. Reservoir rock characteristics</div><div class="topic">3. Porosity</div><div class="topic">4. Permeability</div><div class="topic">5. Reservoir fluids</div><div class="topic">6. How properties affect production</div></div><div class="card"><b>Priority:</b> High<br><b>Estimated time:</b> 35 minutes<br><b>Prerequisite:</b> Basic petroleum concepts</div><button class="primary" onclick="go('study')">Start Study Mode</button>
+</section>
+
+<section id="study" class="screen">
+<h1>Study Mode</h1><p class="muted">PET 101 • Permeability</p><div class="card"><h2>What is permeability?</h2><p>Permeability describes how easily fluids can move through connected spaces within a rock.</p><p>In petroleum engineering, it matters because it affects how easily reservoir fluids can flow toward a production well.</p></div><div class="card"><h2>Think about it</h2><p>Why would a reservoir rock with higher permeability generally allow fluids to move more easily?</p><button class="secondary" onclick="explain()">Explain differently</button><button class="secondary" onclick="go('practice')">Check my understanding</button><p id="different" class="notice"></p></div>
+</section>
+
+<section id="practice" class="screen">
+<h1>Practice</h1><p class="muted">Let's see what you actually understand.</p><div class="card"><h2>Question</h2><p>In your own words, explain why permeability matters when producing petroleum from a reservoir.</p><textarea id="answer" placeholder="Write your answer here..."></textarea><button class="primary" onclick="check()">Submit answer</button><div id="feedback" class="notice hidden"></div></div>
+</section>
+
+<section id="time" class="screen">
+<h1>How much time do you have?</h1><p class="muted">StudyFlow will choose a high-value task.</p><div class="grid"><button class="time" onclick="recommend(5)">5 minutes</button><button class="time" onclick="recommend(10)">10 minutes</button><button class="time" onclick="recommend(15)">15 minutes</button><button class="time" onclick="recommend(20)">20 minutes</button><button class="time" onclick="recommend(30)">30+ minutes</button></div><div id="rec"></div>
+</section>
+
+<section id="plan" class="screen"><h1>Today's Plan</h1><p class="muted">A focused plan beats random studying.</p><div class="card"><h2>Academic Mission</h2><div class="topic">15 min — Permeability</div><div class="topic">10 min — Practice questions</div><div class="topic">10 min — Review</div><button class="primary" onclick="go('study')">Start mission</button></div></section>
+
+<section id="profile" class="screen"><h1>Profile</h1><div class="card"><h2>Exam Readiness</h2><p>PET 101</p><div class="progress"><i style="width:65%"></i></div><p class="muted">Developing — focus on Permeability and Drilling next.</p></div></section>
+</main>
+<nav class="nav"><button onclick="go('home')">🏠<br>Home</button><button onclick="go('courses')">📚<br>Courses</button><button onclick="go('plan')">🗓️<br>Plan</button><button onclick="go('profile')">👤<br>Profile</button></nav>
+</div>
+<script>
+function go(id){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');scrollTo(0,0)}
+function makePack(type){alert(type+' selected. Prototype processing complete.');go('learning')}
+function explain(){document.getElementById('different').textContent='Think of permeability as how easily fluid can pass through connected pathways in rock. More connected pathways generally mean easier movement.'}
+function check(){let a=document.getElementById('answer').value.trim(),f=document.getElementById('feedback');f.classList.remove('hidden');f.innerHTML=a.length<20?'<b>Keep going.</b><br>Explain both fluid movement and why that matters during production.':'<b>Good attempt 👏</b><br>Connect permeability to movement of reservoir fluids toward production wells.'}
+function recommend(m){let t=m<=5?'Review the definition of permeability and explain it in your own words.':m<=10?'Review permeability for 5 minutes, then answer one practice question.':m<=15?'Study permeability for 8 minutes and practice for 7 minutes.':'Permeability review — 12 min; practice questions — 8 min; quick review with remaining time.';document.getElementById('rec').innerHTML='<div class="card"><h2>Your '+m+'-minute mission</h2><p>'+t+'</p><button class="primary" onclick="go(\'study\')">Start</button></div>'}
+function addCourse(){let n=prompt('Enter course code:');if(n)alert(n.toUpperCase()+' added to the prototype.')}
+</script>
+</body>
+</html>
