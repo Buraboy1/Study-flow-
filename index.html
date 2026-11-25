@@ -35,7 +35,7 @@ textarea{width:100%;min-height:130px;padding:15px;border:1px solid #ddd;border-r
 
 <section id="home" class="screen active">
 <h1>Good evening 👋</h1><p class="muted">Here's what matters today.</p>
-<div class="card priority"><div class="small">Your priority</div><h2>🎯 PET 101 — Permeability</h2><p>This topic needs attention based on your current progress.</p><button class="btn" onclick="start()">Start 15-minute session</button></div>
+<div class="card priority"><div class="small">Your priority</div><h2>🎯 PET 101 — Permeability</h2><p>This topic needs attention based on your current progress.</p><button class="btn" onclick="openStudyChooser()">Start a study session</button></div>
 <div class="grid"><div class="stat"><strong id="goals">0/3</strong><span>Today's goals</span></div><div class="stat"><strong>4</strong><span>Courses</span></div></div>
 <div class="card"><h2>My Courses</h2><p class="muted">PET 101 · MTH 101 · PHY 101 · CHM 101</p><button class="btn alt" onclick="show('courses')">View all</button></div>
 <div class="card"><h2>Short on time?</h2><p class="muted">Tell StudyFlow how much time you have and we'll choose a useful task.</p><button class="btn" onclick="show('time')">I have limited time</button></div>
@@ -44,9 +44,9 @@ textarea{width:100%;min-height:130px;padding:15px;border:1px solid #ddd;border-r
 <section id="courses" class="screen">
 <button class="back" onclick="show('home')">← Back</button><h1>My Courses</h1><p class="muted">Everything you're studying this semester.</p>
 <button class="course" onclick="show('pet')"><h2>PET 101</h2><p>Introduction to Petroleum Engineering</p><span class="badge yellow">Developing</span></button>
-<button class="course"><h2>MTH 101</h2><p>Mathematics I</p><span class="badge green">Strong</span></button>
-<button class="course"><h2>PHY 101</h2><p>Physics I</p><span class="badge yellow">Developing</span></button>
-<button class="course"><h2>CHM 101</h2><p>Chemistry I</p><span class="badge green">Strong</span></button>
+<button class="course" onclick="courseDetails('MTH 101')"><h2>MTH 101</h2><p>Mathematics I</p><span class="badge green">Strong</span></button>
+<button class="course" onclick="courseDetails('PHY 101')"><h2>PHY 101</h2><p>Physics I</p><span class="badge yellow">Developing</span></button>
+<button class="course" onclick="courseDetails('CHM 101')"><h2>CHM 101</h2><p>Chemistry I</p><span class="badge green">Strong</span></button>
 </section>
 
 <section id="pet" class="screen">
@@ -60,6 +60,10 @@ textarea{width:100%;min-height:130px;padding:15px;border:1px solid #ddd;border-r
 <div class="card"><h2>Course Progress</h2><div class="progress"><div class="bar" style="width:62%"></div></div><p class="muted">Focus next on Permeability.</p></div>
 <button class="btn" onclick="start()">Start studying</button><button class="btn alt" onclick="toast('Material upload comes next.')">+ Add learning material</button>
 </section>
+
+<section id="courseDetails" class="screen"><button class="back" onclick="show('courses')">← Back</button><h1 id="detailTitle">PET 101</h1><p class="muted" id="detailSubtitle"></p><div class="card"><h2>Topics</h2><div id="detailTopics"></div></div><button class="btn" onclick="openStudyChooser(selectedCourse)">Study this course</button></section>
+
+<section id="chooser" class="screen"><button class="back" onclick="show('home')">← Back</button><h1>Choose what to study</h1><p class="muted">Pick any course, then choose a topic.</p><div id="courseChoices"></div><div id="topicChoices"></div><button id="beginChosen" class="btn" style="display:none" onclick="beginChosenSession()">Start 15-minute session</button></section>
 
 <section id="time" class="screen">
 <button class="back" onclick="show('home')">← Back</button><h1>How much time do you have?</h1><p class="muted">StudyFlow will choose the highest-value task.</p>
@@ -80,8 +84,8 @@ textarea{width:100%;min-height:130px;padding:15px;border:1px solid #ddd;border-r
 </section>
 
 <section id="session" class="screen">
-<span id="step">Step 1 of 3</span><span class="timer" id="timer">15:00</span>
-<button class="back" onclick="show('home')" style="display:block;margin-top:25px">← Exit session</button><div id="sessionBody"></div>
+<span id="step">Step 1 of 4</span><span class="timer" id="timer">15:00</span>
+<button class="back" onclick="confirmExit()" style="display:block;margin-top:25px">← Exit session</button><div id="sessionBody"></div>
 </section>
 </main>
 
@@ -94,24 +98,26 @@ textarea{width:100%;min-height:130px;padding:15px;border:1px solid #ddd;border-r
 </div>
 
 <script>
-let step=1,seconds=900,interval;
-function show(id){
-document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
-document.getElementById(id).classList.add('active');
-document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));
-let n=document.getElementById('n-'+id);if(n)n.classList.add('active');
-scrollTo(0,0);
-}
-function toast(x){let t=document.getElementById('toast');t.textContent=x;t.style.display='block';clearTimeout(window.tt);window.tt=setTimeout(()=>t.style.display='none',2200)}
-function start(){step=1;seconds=900;show('session');render();clearInterval(interval);interval=setInterval(()=>{if(seconds>0)seconds--;let m=String(Math.floor(seconds/60)).padStart(2,'0'),s=String(seconds%60).padStart(2,'0');document.getElementById('timer').textContent=m+':'+s},1000)}
-function render(){
-document.getElementById('step').textContent='Step '+step+' of 3';let c=document.getElementById('sessionBody');
-if(step==1)c.innerHTML='<div class="card"><div class="small">PET 101 · Permeability</div><h1>Understand the concept</h1><p><b>Permeability</b> describes how easily a fluid can move through connected pore spaces in a rock.</p><p>In petroleum engineering, it matters because reservoir fluids need pathways through the rock to move toward a production well.</p><div class="card" style="background:#f7f6ff"><b>Remember:</b> Porosity describes pore space; permeability describes how easily fluid can flow through connected pores.</div><button class="btn" onclick="step=2;render()">I understand — practice now</button></div>';
-if(step==2)c.innerHTML='<div class="card"><div class="small">Active recall</div><h1>Explain it in your own words</h1><p class="question">Why is permeability important when producing petroleum from a reservoir?</p><textarea id="ans" placeholder="Write your answer here..."></textarea><button class="btn" onclick="check()">Check my answer</button></div>';
-if(step==3)c.innerHTML='<div class="card" style="text-align:center"><div class="small">Session complete 🎉</div><h1>Good work.</h1><p class="muted">You reviewed permeability and completed an active-recall question.</p><div class="card" style="text-align:left"><b>Review next:</b><p class="muted">Reservoirs — especially how rock properties affect fluid movement.</p></div><button class="btn" onclick="finish()">Finish session</button></div>';
-}
-function check(){let a=document.getElementById('ans').value.trim();if(a.length<15){toast('Explain the role of fluid flow a little more.');return}toast('Nice — your answer shows understanding.');step=3;setTimeout(render,600)}
-function finish(){document.getElementById('goals').textContent='1/3';toast('Goal completed 🎉');show('home')}
-function recommend(min){let text=min<=5?'Quick recall: define permeability and explain why it matters.':min<=10?'Review permeability, then answer one question.':min<=15?'Understand permeability + active recall.':'Permeability + reservoir review + practice.';document.getElementById('rec').innerHTML='<div class="card priority"><div class="small">Best use of '+min+' minutes</div><h2>🎯 PET 101 — Permeability</h2><p>'+text+'</p><button class="btn" onclick="start()">Start now</button></div>'}
-</script>
-</body></html>
+const courses={"PET 101":{"name":"Introduction to Petroleum Engineering","topics":["Petroleum Basics","Exploration","Reservoirs","Permeability","Drilling"]},"MTH 101":{"name":"Mathematics I","topics":["Functions","Limits","Differentiation","Integration","Sequences"]},"PHY 101":{"name":"Physics I","topics":["Units & Dimensions","Vectors","Motion","Forces","Work & Energy"]},"CHM 101":{"name":"Chemistry I","topics":["Atomic Structure","Periodic Table","Chemical Bonding","Stoichiometry","Gas Laws"]}};
+let selectedCourse="PET 101",selectedTopic="Permeability",step=1,seconds=900,interval=null;
+function show(id){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));let n=document.getElementById('n-'+id);if(n)n.classList.add('active');scrollTo(0,0)}
+function toast(x){let t=document.getElementById('toast');t.textContent=x;t.style.display='block';clearTimeout(window.tt);window.tt=setTimeout(()=>t.style.display='none',2400)}
+function openStudyChooser(c,t){if(c)selectedCourse=c;if(t)selectedTopic=t;let box=document.getElementById('courseChoices');box.innerHTML='<div class="card"><div class="small">Course</div>'+Object.keys(courses).map(c=>`<button class="course" onclick="chooseCourse('${c}')"><h2>${c}</h2><p>${courses[c].name}</p></button>`).join('')+'</div>';renderTopics();show('chooser')}
+function chooseCourse(c){selectedCourse=c;selectedTopic='';renderTopics();document.querySelectorAll('#courseChoices .course').forEach(x=>x.style.border='0')}
+function renderTopics(){let box=document.getElementById('topicChoices');box.innerHTML='<div class="card"><div class="small">Topic in '+selectedCourse+'</div>'+courses[selectedCourse].topics.map(t=>`<button class="option" onclick="chooseTopic('${t}')" style="width:100%;margin-top:10px;padding:15px;border-radius:16px;border:2px solid ${t===selectedTopic?'#635bff':'#e4e3ef'};background:${t===selectedTopic?'#eeeaff':'#fff'};text-align:left">${t}</button>`).join('')+'</div>';document.getElementById('beginChosen').style.display=selectedTopic?'block':'none'}
+function chooseTopic(t){selectedTopic=t;renderTopics()}
+function beginChosenSession(){step=1;seconds=900;show('session');render();startClock()}
+function startClock(){clearInterval(interval);interval=setInterval(()=>{if(seconds>0)seconds--;let m=String(Math.floor(seconds/60)).padStart(2,'0'),s=String(seconds%60).padStart(2,'0');document.getElementById('timer').textContent=m+':'+s;if(seconds===0){clearInterval(interval);toast('15 minutes are up. You can still finish this session.')}},1000)}
+function confirmExit(){if(confirm('Exit this session? It will not be marked complete.')){clearInterval(interval);show('home')}}
+function render(){document.getElementById('step').textContent='Step '+step+' of 4';let c=document.getElementById('sessionBody');if(step===1)c.innerHTML=`<div class="card"><div class="small">${selectedCourse} · ${selectedTopic}</div><h1>Understand the concept</h1><p>${lesson()}</p><div class="card" style="background:#f7f6ff"><b>StudyFlow rule:</b> understanding first, then recall, then practice.</div><button class="btn" onclick="step=2;render()">I'm ready — test me</button></div>`;if(step===2)c.innerHTML=`<div class="card"><div class="small">Active recall</div><h1>Explain it in your own words</h1><p class="question">${question()}</p><textarea id="ans" placeholder="Write what you understand. Don't worry about perfect wording."></textarea><button class="btn" onclick="evaluateAnswer()">Check my understanding</button><div id="answerFeedback"></div></div>`;if(step===3)c.innerHTML=`<div class="card"><div class="small">Practice</div><h1>Apply the idea</h1><p class="question">${practiceQuestion()}</p><div id="opts"></div><div id="practiceFeedback"></div></div>`;if(step===4)c.innerHTML=`<div class="card" style="text-align:center"><div class="small">SESSION COMPLETE 🎉</div><h1>Good work.</h1><p class="muted">You studied <b>${selectedCourse}</b> → <b>${selectedTopic}</b>, explained it in your own words, and completed a practice question.</p><div class="card" style="text-align:left"><b>Review next:</b><p class="muted">${nextTopic()}</p></div><button class="btn" onclick="finish()">Finish session</button></div>`;if(step===3)renderOptions()}
+function lesson(){let x={"PET 101|Permeability":"Permeability describes how easily fluid can move through connected pore spaces in a rock. It matters because reservoir fluids need pathways through the rock to move toward a production well.","MTH 101|Functions":"A function is a rule that assigns each allowed input exactly one output. The input-output relationship is the key idea.","PHY 101|Motion":"Motion describes how an object's position changes with time. Position, velocity and acceleration help describe that change.","CHM 101|Atomic Structure":"Atoms contain a nucleus with protons and neutrons, surrounded by electrons. Electron arrangement strongly influences chemical behaviour."};return x[selectedCourse+'|'+selectedTopic]||'Identify the definition, key idea, an example and an application of this topic from your course material.'}
+function question(){let x={"PET 101|Permeability":"Why is permeability important when producing petroleum from a reservoir?","MTH 101|Functions":"In your own words, what makes a relation a function?","PHY 101|Motion":"In your own words, what does velocity tell you about an object's motion?","CHM 101|Atomic Structure":"In your own words, why are electrons important to chemical behaviour?"};return x[selectedCourse+'|'+selectedTopic]||'Explain the main idea of this topic and why it matters.'}
+function evaluateAnswer(){let a=document.getElementById('ans').value.trim(),fb=document.getElementById('answerFeedback');if(a.length<25){fb.innerHTML='<div class="card" style="background:#fff7dc"><b>Not enough evidence yet.</b><p>Try again with a few complete sentences. Include the main idea and why it matters.</p></div>';return}let l=a.toLowerCase(),keys={"PET 101|Permeability":["fluid","flow","rock"],"MTH 101|Functions":["input","output"],"PHY 101|Motion":["position","time"],"CHM 101|Atomic Structure":["electron","chemical"]}[selectedCourse+'|'+selectedTopic]||[];let hits=keys.filter(k=>l.includes(k)).length;if(hits>=Math.max(1,Math.ceil(keys.length/2))){fb.innerHTML='<div class="card" style="background:#eef9f1"><b>Good understanding ✅</b><p>Your answer contains important ideas. Now let us test your application.</p><button class="btn" onclick="step=3;render()">Continue to practice</button></div>'}else{fb.innerHTML='<div class="card" style="background:#fff7dc"><b>Needs another look.</b><p>Your answer is in your own words, but it is missing key ideas. Re-read the explanation and try again.</p></div>'}}
+function practiceQuestion(){let q={"PET 101|Permeability":"Which statement best describes permeability?","MTH 101|Functions":"Which statement best describes a function?","PHY 101|Motion":"Which quantity describes displacement per unit time?","CHM 101|Atomic Structure":"Which particle is most directly involved in ordinary chemical bonding?"};return q[selectedCourse+'|'+selectedTopic]||'Which statement best matches the main idea?'}
+function renderOptions(){let o={"PET 101|Permeability":["How easily fluid can move through connected pores","The total amount of empty space in a rock","The density of the rock","The colour of the rock"],"MTH 101|Functions":["Every input has exactly one output","Every output has many inputs","There are no inputs","All functions are straight lines"],"PHY 101|Motion":["Velocity","Mass","Temperature","Density"],"CHM 101|Atomic Structure":["Electron","Neutron","Nucleus","Proton"]}[selectedCourse+'|'+selectedTopic]||['The main concept','A random detail','An unrelated idea','None'];document.getElementById('opts').innerHTML=o.map((x,i)=>`<button class="btn alt" onclick="pick(${i})">${String.fromCharCode(65+i)}. ${x}</button>`).join('')}
+function pick(i){let correct=0,fb=document.getElementById('practiceFeedback');if(i===correct){fb.innerHTML='<div class="card" style="background:#eef9f1"><b>Correct ✅</b><p>You applied the idea instead of only repeating the definition.</p><button class="btn" onclick="step=4;render()">Continue</button></div>'}else fb.innerHTML='<div class="card" style="background:#fff7dc"><b>Not quite.</b><p>Think back to the explanation and try again.</p></div>'}
+function nextTopic(){let list=courses[selectedCourse].topics,i=list.indexOf(selectedTopic);return i>=0&&i<list.length-1?selectedCourse+' — '+list[i+1]:'Review this topic again later using active recall.'}
+function finish(){clearInterval(interval);document.getElementById('goals').textContent='1/3';toast('Session completed 🎉');show('home')}
+function courseDetails(c){selectedCourse=c;document.getElementById('detailTitle').textContent=c;document.getElementById('detailSubtitle').textContent=courses[c].name;document.getElementById('detailTopics').innerHTML=courses[c].topics.map(t=>`<div class="topic">${t}<span class="badge yellow">Developing</span></div>`).join('');show('courseDetails')}
+function recommend(min){openStudyChooser(selectedCourse);toast('Choose a course topic for your '+min+'-minute session.')}
+</script></body></html>
