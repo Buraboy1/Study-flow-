@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>StudyFlow v0.5</title>
+<title>StudyFlow v0.6</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:#f5f7fb;color:#172033}
 .app{max-width:460px;margin:auto;min-height:100vh;background:#fff;position:relative;box-shadow:0 0 30px #00000010}
@@ -37,6 +37,39 @@ nav button{background:transparent;color:#667085;padding:7px 8px;font-size:11px}n
 </header>
 
 <main>
+
+<section id="setup" class="screen">
+  <div class="card hero">
+    <div class="small" style="color:#ddd9ff">WELCOME TO STUDYFLOW</div>
+    <h1 style="color:white;margin-top:7px">Let's set up your semester. 👋</h1>
+    <p>Build your own academic workspace in a few quick steps. No fixed course limit.</p>
+  </div>
+  <div id="setupStep1">
+    <div class="card">
+      <div class="small">STEP 1 OF 3</div><h2 style="margin-top:6px">Add your courses</h2>
+      <p>Add every course you're taking this semester. You can always add more later.</p>
+      <div id="setupCourseList"></div>
+      <button class="secondary full" onclick="addSetupCourseRow()">+ Add another course</button>
+    </div>
+    <button class="full" onclick="setupNext()">Continue →</button>
+  </div>
+  <div id="setupStep2" style="display:none">
+    <div class="card">
+      <div class="small">STEP 2 OF 3</div><h2 style="margin-top:6px">Add your course outlines</h2>
+      <p>You can skip any course for now. Add outlines later from each course page.</p>
+      <div id="setupOutlineList"></div>
+    </div>
+    <div class="choice"><button class="secondary" onclick="setupSkipOutline()">Skip for now</button><button onclick="setupFinish()">Finish setup →</button></div>
+  </div>
+  <div id="setupStep3" style="display:none">
+    <div class="card hero"><div class="small" style="color:#ddd9ff">YOU'RE READY</div>
+      <h2 style="color:white">Your StudyFlow workspace is set. 🎉</h2>
+      <p>Now StudyFlow can recommend what matters next instead of giving you a blank dashboard.</p>
+    </div>
+    <button class="full" onclick="completeSetup()">Go to my dashboard →</button>
+  </div>
+</section>
+
 <section id="home" class="screen active">
   <div class="card hero">
     <div class="small" style="color:#ddd9ff">TODAY'S ACADEMIC MISSION</div>
@@ -80,8 +113,9 @@ nav button{background:transparent;color:#667085;padding:7px 8px;font-size:11px}n
 
 <section id="profile" class="screen">
   <h1>Profile</h1>
-  <div class="card"><h3>StudyFlow v0.5</h3><p>This prototype now supports unlimited courses, course roadmaps, Learn Ahead and beginner-friendly learning.</p></div>
+  <div class="card"><h3>StudyFlow v0.6</h3><p>Unlimited courses, first-time setup, course roadmaps, Learn Ahead and beginner-friendly learning.</p></div>
   <div class="card"><h3>Learning philosophy</h3><p>Material → Understand → Practice → Diagnose → Review → Master</p></div>
+  <div class="card"><h3>Testing</h3><p class="small">Use this while testing the prototype. It clears your saved StudyFlow data.</p><button class="danger" onclick="resetStudyFlow()">Reset StudyFlow</button></div>
 </section>
 </main>
 
@@ -91,6 +125,15 @@ nav button{background:transparent;color:#667085;padding:7px 8px;font-size:11px}n
 <button id="nav-plan" onclick="show('plan')"><span class="navico">✓</span>Plan</button>
 <button id="nav-profile" onclick="show('profile')"><span class="navico">●</span>Profile</button>
 </nav>
+
+
+<div id="setupOutlineModal" class="modal">
+<div class="sheet"><h2 id="setupOutlineTitle">Add Course Outline</h2>
+<p>Enter the topics one per line. You can replace this later with the official outline.</p>
+<label>Topics</label><textarea id="setupOutlineText" placeholder="Introduction&#10;Topic 2&#10;Topic 3"></textarea>
+<button class="full" onclick="saveSetupOutline()">Save outline</button>
+<button class="secondary full" style="margin-top:8px" onclick="closeModal('setupOutlineModal')">Cancel</button>
+</div></div>
 
 <div id="courseModal" class="modal">
 <div class="sheet">
@@ -138,17 +181,9 @@ nav button{background:transparent;color:#667085;padding:7px 8px;font-size:11px}n
 
 <script>
 const KEY='studyflow_v05';
-let data=JSON.parse(localStorage.getItem(KEY)||'null')||{
-courses:[
- {id:1,code:'PET 101',title:'Introduction to Petroleum Engineering',semester:'1st Semester',topics:[
-  {name:'Introduction to Petroleum Engineering',status:'completed'},
-  {name:'Petroleum Geology',status:'current'},
-  {name:'Exploration',status:'ahead'},
-  {name:'Reservoirs',status:'not'},
-  {name:'Drilling',status:'not'},
-  {name:'Production',status:'not'}]},
- {id:2,code:'MTH 101',title:'Elementary Mathematics I',semester:'1st Semester',topics:[]}
-]};
+let data=JSON.parse(localStorage.getItem(KEY)||'null')||{courses:[],setupComplete:false,setupStep:1};
+if(!Array.isArray(data.courses)) data.courses=[];
+if(typeof data.setupComplete!=='boolean') data.setupComplete=false;
 let selectedCourse=null, selectedTime=15, timerId=null, seconds=900, sessionStep=0;
 
 function persist(){localStorage.setItem(KEY,JSON.stringify(data))}
@@ -156,7 +191,8 @@ function show(id){
  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
  document.getElementById(id).classList.add('active');
  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
- const n=document.getElementById('nav-'+id); if(n)n.classList.add('active');
+ const navId=(id==='courseDetail'||id==='setup')?'home':id;
+ const n=document.getElementById('nav-'+navId); if(n)n.classList.add('active');
  render();
  window.scrollTo(0,0);
 }
@@ -180,6 +216,68 @@ function renderCourses(){
    </div>`;
  }).join('');
 }
+
+let setupOutlineCourseId=null;
+function initStartup(){
+  if(!data.setupComplete){ show('setup'); ensureSetupRow(); renderSetup(); }
+  else show('home');
+}
+function renderSetup(){ if(document.getElementById('setupCourseList')) ensureSetupRow(); }
+function ensureSetupRow(){
+  const box=document.getElementById('setupCourseList');
+  if(box && !box.children.length) addSetupCourseRow();
+}
+function addSetupCourseRow(code='',title=''){
+  const box=document.getElementById('setupCourseList'); const row=document.createElement('div');
+  row.className='card'; row.style.margin='8px 0';
+  row.innerHTML=`<div class="row"><div style="flex:1">
+    <label>Course code</label><input class="setup-code" placeholder="e.g. PET 101" value="${esc(code)}">
+    <label>Course title</label><input class="setup-title" placeholder="e.g. Introduction to Petroleum Engineering" value="${esc(title)}">
+  </div><button class="danger" onclick="this.closest('.card').remove()">×</button></div>`;
+  box.appendChild(row);
+}
+function setupNext(){
+  const rows=[...document.querySelectorAll('#setupCourseList .card')], courses=[];
+  for(const row of rows){
+    const code=row.querySelector('.setup-code').value.trim(), title=row.querySelector('.setup-title').value.trim();
+    if(!code && !title) continue;
+    if(!code || !title){alert('Complete both the course code and title, or remove the empty row.');return;}
+    courses.push({id:Date.now()+Math.floor(Math.random()*100000),code,title,semester:'Current Semester',topics:[]});
+  }
+  if(!courses.length){alert('Add at least one course to continue.');return;}
+  data.courses=courses;
+  document.getElementById('setupStep1').style.display='none';
+  document.getElementById('setupStep2').style.display='block';
+  renderSetupOutlines();
+}
+function renderSetupOutlines(){
+  document.getElementById('setupOutlineList').innerHTML=data.courses.map(c=>`<div class="card">
+    <div class="row"><div><h3>${esc(c.code)}</h3><div class="small">${esc(c.title)}</div></div>
+    <button onclick="openSetupOutline(${c.id})">${c.topics.length?'Edit':'Add'} outline</button></div>
+    ${c.topics.length?`<div class="small" style="margin-top:8px">${c.topics.length} topics added</div>`:''}
+  </div>`).join('');
+}
+function openSetupOutline(id){
+  setupOutlineCourseId=id; const c=data.courses.find(x=>x.id===id);
+  document.getElementById('setupOutlineTitle').textContent=`Outline — ${c.code}`;
+  document.getElementById('setupOutlineText').value=c.topics.map(t=>t.name).join('\n');
+  document.getElementById('setupOutlineModal').classList.add('open');
+}
+function saveSetupOutline(){
+  const c=data.courses.find(x=>x.id===setupOutlineCourseId);
+  const lines=document.getElementById('setupOutlineText').value.split('\n').map(x=>x.trim()).filter(Boolean);
+  if(!lines.length){alert('Add at least one topic, or cancel to skip this outline.');return;}
+  c.topics=lines.map((name,i)=>({name,status:i===0?'current':i===1?'ahead':'not'}));
+  closeModal('setupOutlineModal'); renderSetupOutlines();
+}
+function setupSkipOutline(){document.getElementById('setupStep2').style.display='none';document.getElementById('setupStep3').style.display='block';}
+function setupFinish(){document.getElementById('setupStep2').style.display='none';document.getElementById('setupStep3').style.display='block';}
+function completeSetup(){data.setupComplete=true;data.setupStep=3;persist();show('home');}
+function resetStudyFlow(){
+  if(!confirm('Reset StudyFlow and start the setup again?')) return;
+  localStorage.removeItem(KEY); location.reload();
+}
+
 function openCourse(){document.getElementById('courseModal').classList.add('open');document.getElementById('newCode').focus()}
 function saveCourse(){
  const code=document.getElementById('newCode').value.trim(), title=document.getElementById('newTitle').value.trim(), semester=document.getElementById('newSemester').value.trim()||'Semester';
@@ -272,6 +370,7 @@ function topicExplain(name){
 const oldRender=render;
 render=function(){oldRender();if(document.getElementById('courseDetail').classList.contains('active'))renderDetail()};
 render();
+initStartup();
 </script>
 </body>
 </html>
