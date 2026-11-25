@@ -1,123 +1,277 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>StudyFlow</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StudyFlow v0.5</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,sans-serif;background:#f5f5ff;color:#171827}
-button{font:inherit;border:0;cursor:pointer}.app{min-height:100vh;padding-bottom:82px}
-header{background:white;padding:20px 25px;border-bottom:1px solid #eee;position:sticky;top:0;z-index:5}
-.logo{font-size:28px;font-weight:800}.logo b{color:#635bff}.tag{color:#777;margin-top:4px}
-main{max-width:760px;margin:auto;padding:25px}.screen{display:none}.screen.active{display:block}
-h1{font-size:32px;line-height:1.15}h2{font-size:24px}.muted{color:#777}
-.card,.course,.stat{background:#fff;border-radius:24px;padding:23px;margin:16px 0;box-shadow:0 7px 25px #3020600d}
-.priority{border-left:7px solid #635bff}.small{font-size:13px;color:#888;text-transform:uppercase}
-.btn{width:100%;padding:16px;border-radius:16px;background:#635bff;color:white;font-weight:700;margin-top:12px}
-.btn.alt{background:#eeeaff;color:#554dcc}.back{padding:12px 17px;border-radius:14px;background:#eeeaff;color:#554dcc;font-weight:700}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.stat strong{font-size:30px;display:block}.stat span{color:#777}
-.course{display:block;width:100%;text-align:left}.course p{color:#777}.badge{display:inline-block;padding:7px 11px;border-radius:99px;font-size:13px}
-.green{background:#dff7e9;color:#258653}.yellow{background:#fff0c9;color:#927018}.red{background:#ffe1e1;color:#a33f3f}
-.topic{padding:15px 0;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center}
-.progress{height:11px;background:#e5e5ee;border-radius:20px;overflow:hidden}.bar{height:100%;background:#635bff}
-.bottom{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid #eee;display:grid;grid-template-columns:repeat(4,1fr);z-index:10}
-.nav{background:white;color:#777;padding:12px 3px}.nav.active{color:#635bff;font-weight:700}.nav i{display:block;font-style:normal;font-size:21px}
-textarea{width:100%;min-height:130px;padding:15px;border:1px solid #ddd;border-radius:16px;font:inherit;margin-top:12px}
-.question{font-size:20px;line-height:1.45;font-weight:650}.timer{float:right;background:#eeeaff;color:#554dcc;padding:8px 13px;border-radius:99px}
-.toast{display:none;position:fixed;bottom:95px;left:50%;transform:translateX(-50%);background:#222;color:white;padding:12px 18px;border-radius:99px;z-index:20}
-@media(max-width:520px){main{padding:20px 17px}}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:#f5f7fb;color:#172033}
+.app{max-width:460px;margin:auto;min-height:100vh;background:#fff;position:relative;box-shadow:0 0 30px #00000010}
+header{padding:22px 20px 12px;background:#fff;position:sticky;top:0;z-index:5;border-bottom:1px solid #edf0f5}
+.brand{font-size:25px;font-weight:800}.brand span{color:#4f46e5}.sub{color:#697386;font-size:13px;margin-top:4px}
+main{padding:18px 18px 90px}.screen{display:none}.screen.active{display:block}
+h1{font-size:24px;margin:4px 0 8px}h2{font-size:19px;margin:0 0 10px}h3{font-size:16px;margin:0 0 6px}
+p{color:#667085;line-height:1.5}.card{background:#fff;border:1px solid #e8ebf1;border-radius:18px;padding:16px;margin:12px 0;box-shadow:0 5px 18px #10182808}
+.hero{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:white;border:0}.hero p{color:#e9e7ff}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px}.chips{display:flex;gap:7px;flex-wrap:wrap}.chip{padding:6px 9px;border-radius:999px;background:#eef0ff;color:#4f46e5;font-size:12px;font-weight:700}
+button{border:0;border-radius:12px;padding:11px 14px;font-weight:750;cursor:pointer;background:#4f46e5;color:white}.secondary{background:#eef0f7;color:#344054}.danger{background:#fee4e2;color:#b42318}.full{width:100%}
+.course{cursor:pointer}.course:hover{transform:translateY(-1px)}.course-icon{width:42px;height:42px;border-radius:13px;background:#eef0ff;display:grid;place-items:center;font-weight:800;color:#4f46e5}
+.progress{height:8px;background:#edf0f5;border-radius:99px;overflow:hidden;margin:10px 0}.bar{height:100%;background:#4f46e5;border-radius:99px}
+.small{font-size:12px;color:#667085}.big{font-size:30px;font-weight:850}.empty{text-align:center;padding:28px 8px;color:#667085}
+input,textarea,select{width:100%;padding:12px;border:1px solid #d9dee8;border-radius:11px;font:inherit;margin:6px 0 12px}textarea{min-height:110px;resize:vertical}
+label{font-size:13px;font-weight:700;color:#344054}
+.choice{display:flex;gap:10px;margin:10px 0}.choice button{flex:1;background:#f7f8fc;color:#344054;border:1px solid #e5e7eb;text-align:left}.choice button.selected{background:#eef0ff;color:#4338ca;border-color:#8b83ff}
+.topic{padding:13px;border:1px solid #e7eaf0;border-radius:13px;margin:8px 0;cursor:pointer}.topic.current{border-color:#818cf8;background:#f6f5ff}.topic.ahead{border-color:#c4b5fd;background:#faf8ff}
+.badge{font-size:11px;padding:4px 7px;border-radius:999px;background:#f2f4f7;color:#475467}.green{background:#dcfae6;color:#067647}.purple{background:#ede9fe;color:#6d28d9}.blue{background:#dbeafe;color:#1d4ed8}
+nav{position:fixed;bottom:0;width:min(460px,100%);background:#fff;border-top:1px solid #e8ebf1;display:flex;justify-content:space-around;padding:9px 4px 10px;z-index:10}
+nav button{background:transparent;color:#667085;padding:7px 8px;font-size:11px}nav button.active{color:#4f46e5}.navico{font-size:20px;display:block;margin-bottom:2px}
+.modal{position:fixed;inset:0;background:#10182866;display:none;align-items:flex-end;z-index:20}.modal.open{display:flex}.sheet{background:white;width:min(460px,100%);margin:auto auto 0;border-radius:24px 24px 0 0;padding:20px;max-height:88vh;overflow:auto}
+.kpi{display:grid;grid-template-columns:1fr 1fr;gap:10px}.kpi .card{margin:0}.muted{color:#98a2b3}
 </style>
 </head>
 <body>
 <div class="app">
-<header><div class="logo">Study<b>Flow</b></div><div class="tag">Study smarter. Live your university life.</div></header>
-<main>
+<header>
+  <div class="brand">Study<span>Flow</span></div>
+  <div class="sub">Study smarter. Live your university life.</div>
+</header>
 
+<main>
 <section id="home" class="screen active">
-<h1>Good evening 👋</h1><p class="muted">Here's what matters today.</p>
-<div class="card priority"><div class="small">Your priority</div><h2>🎯 PET 101 — Permeability</h2><p>This topic needs attention based on your current progress.</p><button class="btn" onclick="openStudyChooser()">Start a study session</button></div>
-<div class="grid"><div class="stat"><strong id="goals">0/3</strong><span>Today's goals</span></div><div class="stat"><strong>4</strong><span>Courses</span></div></div>
-<div class="card"><h2>My Courses</h2><p class="muted">PET 101 · MTH 101 · PHY 101 · CHM 101</p><button class="btn alt" onclick="show('courses')">View all</button></div>
-<div class="card"><h2>Short on time?</h2><p class="muted">Tell StudyFlow how much time you have and we'll choose a useful task.</p><button class="btn" onclick="show('time')">I have limited time</button></div>
+  <div class="card hero">
+    <div class="small" style="color:#ddd9ff">TODAY'S ACADEMIC MISSION</div>
+    <h2 style="font-size:22px;margin-top:7px">Make your next study session count.</h2>
+    <p>Tell StudyFlow how much time you have and it picks a high-value task.</p>
+    <button onclick="openTime()">I have limited time →</button>
+  </div>
+  <div class="kpi">
+    <div class="card"><div class="small">Courses</div><div class="big" id="courseCount">0</div></div>
+    <div class="card"><div class="small">Topics learned</div><div class="big" id="topicCount">0</div></div>
+  </div>
+  <div class="card">
+    <div class="row"><h2>Next best move</h2><span class="badge purple">Smart</span></div>
+    <p id="nextMove">Add your courses and course outlines to unlock recommendations.</p>
+    <button class="secondary" onclick="show('courses')">View my courses</button>
+  </div>
 </section>
 
 <section id="courses" class="screen">
-<button class="back" onclick="show('home')">← Back</button><h1>My Courses</h1><p class="muted">Everything you're studying this semester.</p>
-<button class="course" onclick="show('pet')"><h2>PET 101</h2><p>Introduction to Petroleum Engineering</p><span class="badge yellow">Developing</span></button>
-<button class="course" onclick="courseDetails('MTH 101')"><h2>MTH 101</h2><p>Mathematics I</p><span class="badge green">Strong</span></button>
-<button class="course" onclick="courseDetails('PHY 101')"><h2>PHY 101</h2><p>Physics I</p><span class="badge yellow">Developing</span></button>
-<button class="course" onclick="courseDetails('CHM 101')"><h2>CHM 101</h2><p>Chemistry I</p><span class="badge green">Strong</span></button>
+  <div class="row"><div><h1>My Courses</h1><p>Manage as many courses as you actually take.</p></div><button onclick="openCourse()">+ Add</button></div>
+  <div id="courseList"></div>
 </section>
 
-<section id="pet" class="screen">
-<button class="back" onclick="show('courses')">← Back</button><h1>PET 101</h1><p class="muted">Introduction to Petroleum Engineering</p>
-<div class="card"><h2>Topics</h2>
-<div class="topic">Petroleum Basics <span class="badge green">Strong</span></div>
-<div class="topic">Exploration <span class="badge green">Strong</span></div>
-<div class="topic">Reservoirs <span class="badge yellow">Developing</span></div>
-<div class="topic">Permeability <span class="badge red">Needs attention</span></div>
-<div class="topic">Drilling <span class="badge yellow">Developing</span></div></div>
-<div class="card"><h2>Course Progress</h2><div class="progress"><div class="bar" style="width:62%"></div></div><p class="muted">Focus next on Permeability.</p></div>
-<button class="btn" onclick="start()">Start studying</button><button class="btn alt" onclick="toast('Material upload comes next.')">+ Add learning material</button>
-</section>
-
-<section id="courseDetails" class="screen"><button class="back" onclick="show('courses')">← Back</button><h1 id="detailTitle">PET 101</h1><p class="muted" id="detailSubtitle"></p><div class="card"><h2>Topics</h2><div id="detailTopics"></div></div><button class="btn" onclick="openStudyChooser(selectedCourse)">Study this course</button></section>
-
-<section id="chooser" class="screen"><button class="back" onclick="show('home')">← Back</button><h1>Choose what to study</h1><p class="muted">Pick any course, then choose a topic.</p><div id="courseChoices"></div><div id="topicChoices"></div><button id="beginChosen" class="btn" style="display:none" onclick="beginChosenSession()">Start 15-minute session</button></section>
-
-<section id="time" class="screen">
-<button class="back" onclick="show('home')">← Back</button><h1>How much time do you have?</h1><p class="muted">StudyFlow will choose the highest-value task.</p>
-<div class="grid"><button class="btn alt" onclick="recommend(5)">5 min</button><button class="btn alt" onclick="recommend(10)">10 min</button><button class="btn alt" onclick="recommend(15)">15 min</button><button class="btn alt" onclick="recommend(30)">30 min</button></div><div id="rec"></div>
+<section id="courseDetail" class="screen">
+  <button class="secondary" onclick="show('courses')">← Courses</button>
+  <div id="detail"></div>
 </section>
 
 <section id="plan" class="screen">
-<h1>Today's Plan 📅</h1><p class="muted">A simple academic mission for today.</p>
-<div class="card"><div class="small">Priority 1</div><h2>PET 101 — Permeability</h2><span class="badge red">Needs attention</span><button class="btn" onclick="start()">Study now</button></div>
-<div class="card"><div class="small">Priority 2</div><h2>PET 101 — Reservoirs</h2><button class="btn alt" onclick="start()">Review topic</button></div>
-<div class="card"><h2>Daily target</h2><div class="progress"><div class="bar" style="width:67%"></div></div><p class="muted">2 of 3 academic goals completed</p></div>
+  <h1>Today's Plan</h1>
+  <p>A realistic academic plan, not a punishment.</p>
+  <div class="card">
+    <div class="row"><div><h3>Learn ahead</h3><p style="margin:4px 0">Study the next topic before your lecturer reaches it.</p></div><span class="badge purple">25 min</span></div>
+    <button onclick="openLearnAhead()">Start Learn Ahead</button>
+  </div>
+  <div class="card">
+    <div class="row"><div><h3>Weak-topic review</h3><p style="margin:4px 0">Revisit something you previously struggled with.</p></div><span class="badge">15 min</span></div>
+    <button class="secondary" onclick="openTime()">Start session</button>
+  </div>
 </section>
 
 <section id="profile" class="screen">
-<h1>Profile 👤</h1><div class="card"><h2>Student</h2><p class="muted">University undergraduate</p></div>
-<div class="card"><h2>Study preferences</h2><p>🎯 Focus on understanding</p><p>🧠 Active recall</p><p>⏱️ Time-aware studying</p><p>🎉 Keep time for university life</p></div>
-<div class="card"><h2>About StudyFlow</h2><p class="muted">StudyFlow helps students decide what to study, understand course material, practise what they know and identify what needs more attention.</p></div>
-</section>
-
-<section id="session" class="screen">
-<span id="step">Step 1 of 4</span><span class="timer" id="timer">15:00</span>
-<button class="back" onclick="confirmExit()" style="display:block;margin-top:25px">← Exit session</button><div id="sessionBody"></div>
+  <h1>Profile</h1>
+  <div class="card"><h3>StudyFlow v0.5</h3><p>This prototype now supports unlimited courses, course roadmaps, Learn Ahead and beginner-friendly learning.</p></div>
+  <div class="card"><h3>Learning philosophy</h3><p>Material → Understand → Practice → Diagnose → Review → Master</p></div>
 </section>
 </main>
 
-<nav class="bottom">
-<button class="nav active" id="n-home" onclick="show('home')"><i>🏠</i>Home</button>
-<button class="nav" id="n-courses" onclick="show('courses')"><i>📚</i>Courses</button>
-<button class="nav" id="n-plan" onclick="show('plan')"><i>📅</i>Plan</button>
-<button class="nav" id="n-profile" onclick="show('profile')"><i>👤</i>Profile</button>
-</nav><div id="toast" class="toast"></div>
+<nav>
+<button id="nav-home" class="active" onclick="show('home')"><span class="navico">⌂</span>Home</button>
+<button id="nav-courses" onclick="show('courses')"><span class="navico">▣</span>Courses</button>
+<button id="nav-plan" onclick="show('plan')"><span class="navico">✓</span>Plan</button>
+<button id="nav-profile" onclick="show('profile')"><span class="navico">●</span>Profile</button>
+</nav>
+
+<div id="courseModal" class="modal">
+<div class="sheet">
+<h2>Add a course</h2><p>There is no four-course limit. Add every course you need.</p>
+<label>Course code</label><input id="newCode" placeholder="e.g. PET 101">
+<label>Course title</label><input id="newTitle" placeholder="e.g. Introduction to Petroleum Engineering">
+<label>Semester</label><input id="newSemester" placeholder="e.g. 1st Semester">
+<button class="full" onclick="saveCourse()">Add Course</button>
+<button class="secondary full" style="margin-top:8px" onclick="closeModal('courseModal')">Cancel</button>
+</div></div>
+
+<div id="timeModal" class="modal">
+<div class="sheet">
+<h2>How much time do you have?</h2><p>StudyFlow will choose a useful next action.</p>
+<div class="choice" id="timeChoices">
+<button onclick="pickTime(5)">5 min</button><button onclick="pickTime(10)">10 min</button><button onclick="pickTime(15)">15 min</button>
+</div>
+<div class="choice"><button onclick="pickTime(20)">20 min</button><button onclick="pickTime(30)">30+ min</button></div>
+<div id="timeResult"></div>
+</div></div>
+
+<div id="learnModal" class="modal">
+<div class="sheet">
+<h2>Learn Ahead</h2>
+<p id="learnText">Choose a course with a roadmap to learn its next topic.</p>
+<div id="learnChoices"></div>
+<button class="secondary full" onclick="closeModal('learnModal')">Close</button>
+</div></div>
+
+<div id="outlineModal" class="modal">
+<div class="sheet">
+<h2>Add Course Outline</h2><p>Paste the official course outline or type the topics. StudyFlow will turn it into a roadmap.</p>
+<label>Topics — one per line</label>
+<textarea id="outlineText" placeholder="Introduction&#10;Petroleum Geology&#10;Exploration&#10;Reservoirs"></textarea>
+<button class="full" onclick="saveOutline()">Create Roadmap</button>
+<button class="secondary full" style="margin-top:8px" onclick="closeModal('outlineModal')">Cancel</button>
+</div></div>
+
+<div id="sessionModal" class="modal">
+<div class="sheet">
+<div class="row"><div><span class="badge purple">Study Session</span><h2 id="sessionTitle">Learn</h2></div><div class="big" id="timer">15:00</div></div>
+<div id="sessionBody"></div>
+</div></div>
 </div>
 
 <script>
-const courses={"PET 101":{"name":"Introduction to Petroleum Engineering","topics":["Petroleum Basics","Exploration","Reservoirs","Permeability","Drilling"]},"MTH 101":{"name":"Mathematics I","topics":["Functions","Limits","Differentiation","Integration","Sequences"]},"PHY 101":{"name":"Physics I","topics":["Units & Dimensions","Vectors","Motion","Forces","Work & Energy"]},"CHM 101":{"name":"Chemistry I","topics":["Atomic Structure","Periodic Table","Chemical Bonding","Stoichiometry","Gas Laws"]}};
-let selectedCourse="PET 101",selectedTopic="Permeability",step=1,seconds=900,interval=null;
-function show(id){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));let n=document.getElementById('n-'+id);if(n)n.classList.add('active');scrollTo(0,0)}
-function toast(x){let t=document.getElementById('toast');t.textContent=x;t.style.display='block';clearTimeout(window.tt);window.tt=setTimeout(()=>t.style.display='none',2400)}
-function openStudyChooser(c,t){if(c)selectedCourse=c;if(t)selectedTopic=t;let box=document.getElementById('courseChoices');box.innerHTML='<div class="card"><div class="small">Course</div>'+Object.keys(courses).map(c=>`<button class="course" onclick="chooseCourse('${c}')"><h2>${c}</h2><p>${courses[c].name}</p></button>`).join('')+'</div>';renderTopics();show('chooser')}
-function chooseCourse(c){selectedCourse=c;selectedTopic='';renderTopics();document.querySelectorAll('#courseChoices .course').forEach(x=>x.style.border='0')}
-function renderTopics(){let box=document.getElementById('topicChoices');box.innerHTML='<div class="card"><div class="small">Topic in '+selectedCourse+'</div>'+courses[selectedCourse].topics.map(t=>`<button class="option" onclick="chooseTopic('${t}')" style="width:100%;margin-top:10px;padding:15px;border-radius:16px;border:2px solid ${t===selectedTopic?'#635bff':'#e4e3ef'};background:${t===selectedTopic?'#eeeaff':'#fff'};text-align:left">${t}</button>`).join('')+'</div>';document.getElementById('beginChosen').style.display=selectedTopic?'block':'none'}
-function chooseTopic(t){selectedTopic=t;renderTopics()}
-function beginChosenSession(){step=1;seconds=900;show('session');render();startClock()}
-function startClock(){clearInterval(interval);interval=setInterval(()=>{if(seconds>0)seconds--;let m=String(Math.floor(seconds/60)).padStart(2,'0'),s=String(seconds%60).padStart(2,'0');document.getElementById('timer').textContent=m+':'+s;if(seconds===0){clearInterval(interval);toast('15 minutes are up. You can still finish this session.')}},1000)}
-function confirmExit(){if(confirm('Exit this session? It will not be marked complete.')){clearInterval(interval);show('home')}}
-function render(){document.getElementById('step').textContent='Step '+step+' of 4';let c=document.getElementById('sessionBody');if(step===1)c.innerHTML=`<div class="card"><div class="small">${selectedCourse} · ${selectedTopic}</div><h1>Understand the concept</h1><p>${lesson()}</p><div class="card" style="background:#f7f6ff"><b>StudyFlow rule:</b> understanding first, then recall, then practice.</div><button class="btn" onclick="step=2;render()">I'm ready — test me</button></div>`;if(step===2)c.innerHTML=`<div class="card"><div class="small">Active recall</div><h1>Explain it in your own words</h1><p class="question">${question()}</p><textarea id="ans" placeholder="Write what you understand. Don't worry about perfect wording."></textarea><button class="btn" onclick="evaluateAnswer()">Check my understanding</button><div id="answerFeedback"></div></div>`;if(step===3)c.innerHTML=`<div class="card"><div class="small">Practice</div><h1>Apply the idea</h1><p class="question">${practiceQuestion()}</p><div id="opts"></div><div id="practiceFeedback"></div></div>`;if(step===4)c.innerHTML=`<div class="card" style="text-align:center"><div class="small">SESSION COMPLETE 🎉</div><h1>Good work.</h1><p class="muted">You studied <b>${selectedCourse}</b> → <b>${selectedTopic}</b>, explained it in your own words, and completed a practice question.</p><div class="card" style="text-align:left"><b>Review next:</b><p class="muted">${nextTopic()}</p></div><button class="btn" onclick="finish()">Finish session</button></div>`;if(step===3)renderOptions()}
-function lesson(){let x={"PET 101|Permeability":"Permeability describes how easily fluid can move through connected pore spaces in a rock. It matters because reservoir fluids need pathways through the rock to move toward a production well.","MTH 101|Functions":"A function is a rule that assigns each allowed input exactly one output. The input-output relationship is the key idea.","PHY 101|Motion":"Motion describes how an object's position changes with time. Position, velocity and acceleration help describe that change.","CHM 101|Atomic Structure":"Atoms contain a nucleus with protons and neutrons, surrounded by electrons. Electron arrangement strongly influences chemical behaviour."};return x[selectedCourse+'|'+selectedTopic]||'Identify the definition, key idea, an example and an application of this topic from your course material.'}
-function question(){let x={"PET 101|Permeability":"Why is permeability important when producing petroleum from a reservoir?","MTH 101|Functions":"In your own words, what makes a relation a function?","PHY 101|Motion":"In your own words, what does velocity tell you about an object's motion?","CHM 101|Atomic Structure":"In your own words, why are electrons important to chemical behaviour?"};return x[selectedCourse+'|'+selectedTopic]||'Explain the main idea of this topic and why it matters.'}
-function evaluateAnswer(){let a=document.getElementById('ans').value.trim(),fb=document.getElementById('answerFeedback');if(a.length<25){fb.innerHTML='<div class="card" style="background:#fff7dc"><b>Not enough evidence yet.</b><p>Try again with a few complete sentences. Include the main idea and why it matters.</p></div>';return}let l=a.toLowerCase(),keys={"PET 101|Permeability":["fluid","flow","rock"],"MTH 101|Functions":["input","output"],"PHY 101|Motion":["position","time"],"CHM 101|Atomic Structure":["electron","chemical"]}[selectedCourse+'|'+selectedTopic]||[];let hits=keys.filter(k=>l.includes(k)).length;if(hits>=Math.max(1,Math.ceil(keys.length/2))){fb.innerHTML='<div class="card" style="background:#eef9f1"><b>Good understanding ✅</b><p>Your answer contains important ideas. Now let us test your application.</p><button class="btn" onclick="step=3;render()">Continue to practice</button></div>'}else{fb.innerHTML='<div class="card" style="background:#fff7dc"><b>Needs another look.</b><p>Your answer is in your own words, but it is missing key ideas. Re-read the explanation and try again.</p></div>'}}
-function practiceQuestion(){let q={"PET 101|Permeability":"Which statement best describes permeability?","MTH 101|Functions":"Which statement best describes a function?","PHY 101|Motion":"Which quantity describes displacement per unit time?","CHM 101|Atomic Structure":"Which particle is most directly involved in ordinary chemical bonding?"};return q[selectedCourse+'|'+selectedTopic]||'Which statement best matches the main idea?'}
-function renderOptions(){let o={"PET 101|Permeability":["How easily fluid can move through connected pores","The total amount of empty space in a rock","The density of the rock","The colour of the rock"],"MTH 101|Functions":["Every input has exactly one output","Every output has many inputs","There are no inputs","All functions are straight lines"],"PHY 101|Motion":["Velocity","Mass","Temperature","Density"],"CHM 101|Atomic Structure":["Electron","Neutron","Nucleus","Proton"]}[selectedCourse+'|'+selectedTopic]||['The main concept','A random detail','An unrelated idea','None'];document.getElementById('opts').innerHTML=o.map((x,i)=>`<button class="btn alt" onclick="pick(${i})">${String.fromCharCode(65+i)}. ${x}</button>`).join('')}
-function pick(i){let correct=0,fb=document.getElementById('practiceFeedback');if(i===correct){fb.innerHTML='<div class="card" style="background:#eef9f1"><b>Correct ✅</b><p>You applied the idea instead of only repeating the definition.</p><button class="btn" onclick="step=4;render()">Continue</button></div>'}else fb.innerHTML='<div class="card" style="background:#fff7dc"><b>Not quite.</b><p>Think back to the explanation and try again.</p></div>'}
-function nextTopic(){let list=courses[selectedCourse].topics,i=list.indexOf(selectedTopic);return i>=0&&i<list.length-1?selectedCourse+' — '+list[i+1]:'Review this topic again later using active recall.'}
-function finish(){clearInterval(interval);document.getElementById('goals').textContent='1/3';toast('Session completed 🎉');show('home')}
-function courseDetails(c){selectedCourse=c;document.getElementById('detailTitle').textContent=c;document.getElementById('detailSubtitle').textContent=courses[c].name;document.getElementById('detailTopics').innerHTML=courses[c].topics.map(t=>`<div class="topic">${t}<span class="badge yellow">Developing</span></div>`).join('');show('courseDetails')}
-function recommend(min){openStudyChooser(selectedCourse);toast('Choose a course topic for your '+min+'-minute session.')}
-</script></body></html>
+const KEY='studyflow_v05';
+let data=JSON.parse(localStorage.getItem(KEY)||'null')||{
+courses:[
+ {id:1,code:'PET 101',title:'Introduction to Petroleum Engineering',semester:'1st Semester',topics:[
+  {name:'Introduction to Petroleum Engineering',status:'completed'},
+  {name:'Petroleum Geology',status:'current'},
+  {name:'Exploration',status:'ahead'},
+  {name:'Reservoirs',status:'not'},
+  {name:'Drilling',status:'not'},
+  {name:'Production',status:'not'}]},
+ {id:2,code:'MTH 101',title:'Elementary Mathematics I',semester:'1st Semester',topics:[]}
+]};
+let selectedCourse=null, selectedTime=15, timerId=null, seconds=900, sessionStep=0;
+
+function persist(){localStorage.setItem(KEY,JSON.stringify(data))}
+function show(id){
+ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+ document.getElementById(id).classList.add('active');
+ document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+ const n=document.getElementById('nav-'+id); if(n)n.classList.add('active');
+ render();
+ window.scrollTo(0,0);
+}
+function render(){
+ document.getElementById('courseCount').textContent=data.courses.length;
+ document.getElementById('topicCount').textContent=data.courses.reduce((a,c)=>a+c.topics.filter(t=>t.status==='completed').length,0);
+ const candidate=data.courses.flatMap(c=>c.topics.map(t=>({c,t}))).find(x=>x.t.status==='ahead')||data.courses.flatMap(c=>c.topics.map(t=>({c,t}))).find(x=>x.t.status==='current');
+ document.getElementById('nextMove').textContent=candidate?`Next useful topic: ${candidate.t.name} (${candidate.c.code}). ${candidate.t.status==='ahead'?'You can learn ahead before class.':'This is where your class is currently focused.'}`:'Add a course outline to unlock Learn Ahead recommendations.';
+ renderCourses();
+}
+function renderCourses(){
+ const el=document.getElementById('courseList'); if(!el)return;
+ if(!data.courses.length){el.innerHTML='<div class="empty">No courses yet.<br><br>Tap + Add to create your first course.</div>';return}
+ el.innerHTML=data.courses.map(c=>{
+   const done=c.topics.filter(t=>t.status==='completed').length, total=c.topics.length;
+   const pct=total?Math.round(done/total*100):0;
+   return `<div class="card course" onclick="openDetail(${c.id})">
+    <div class="row"><div class="row" style="justify-content:flex-start"><div class="course-icon">${c.code.slice(0,2)}</div><div><h3>${esc(c.code)}</h3><div class="small">${esc(c.title)}</div></div></div><span>›</span></div>
+    <div class="progress"><div class="bar" style="width:${pct}%"></div></div>
+    <div class="row"><span class="small">${total?done+' / '+total+' topics completed':'No outline yet'}</span><span class="badge">${total?pct+'%':''}</span></div>
+   </div>`;
+ }).join('');
+}
+function openCourse(){document.getElementById('courseModal').classList.add('open');document.getElementById('newCode').focus()}
+function saveCourse(){
+ const code=document.getElementById('newCode').value.trim(), title=document.getElementById('newTitle').value.trim(), semester=document.getElementById('newSemester').value.trim()||'Semester';
+ if(!code||!title){alert('Please enter the course code and title.');return}
+ data.courses.push({id:Date.now(),code,title,semester,topics:[]});persist();
+ ['newCode','newTitle','newSemester'].forEach(x=>document.getElementById(x).value='');
+ closeModal('courseModal');show('courses');
+}
+function openDetail(id){selectedCourse=data.courses.find(c=>c.id===id);show('courseDetail')}
+function renderDetail(){
+ const c=selectedCourse;if(!c)return;
+ const el=document.getElementById('detail');
+ const labels={completed:['Completed','green'],current:['In class','blue'],ahead:['Learn ahead','purple'],not:['Not started','']};
+ el.innerHTML=`<div class="card hero"><div class="small" style="color:#ddd9ff">${esc(c.semester)}</div><h1 style="color:white">${esc(c.code)}</h1><p>${esc(c.title)}</p></div>
+ <div class="row"><h2>Course Roadmap</h2><button onclick="openOutline()">+ Outline</button></div>
+ ${c.topics.length?c.topics.map((t,i)=>{let l=labels[t.status]||labels.not;return `<div class="topic ${t.status}" onclick="startTopic(${i})"><div class="row"><div><b>${i+1}. ${esc(t.name)}</b><div class="small">${t.status==='ahead'?'Recommended next topic':t.status==='current'?'Your class may be here':''}</div></div><span class="badge ${l[1]}">${l[0]}</span></div></div>`}).join(''):`<div class="card empty"><b>No course outline yet.</b><p>Add the official outline and StudyFlow will turn it into a roadmap.</p><button onclick="openOutline()">Add Course Outline</button></div>`}
+ ${c.topics.length?`<div class="card"><h3>🚀 Learn Ahead</h3><p>${getAheadText(c)}</p><button onclick="openLearnAheadFor(${c.id})">Learn Ahead →</button></div>`:''}`;
+}
+function getAheadText(c){let t=c.topics.find(x=>x.status==='ahead')||c.topics.find(x=>x.status==='not');return t?`Recommended: <b>${esc(t.name)}</b>. Start with a beginner-friendly explanation if you're new to it.`:'You are up to date with this roadmap.'}
+function openOutline(){document.getElementById('outlineModal').classList.add('open');document.getElementById('outlineText').value=selectedCourse?.topics.map(t=>t.name).join('\\n')||''}
+function saveOutline(){
+ const lines=document.getElementById('outlineText').value.split('\\n').map(x=>x.trim()).filter(Boolean);
+ if(!lines.length){alert('Add at least one topic.');return}
+ selectedCourse.topics=lines.map((name,i)=>({name,status:i===0?'current':i===1?'ahead':'not'}));
+ persist();closeModal('outlineModal');show('courseDetail');
+}
+function openTime(){document.getElementById('timeModal').classList.add('open');document.getElementById('timeResult').innerHTML=''}
+function pickTime(min){
+ selectedTime=min;seconds=min*60;
+ const candidate=data.courses.flatMap(c=>c.topics.map(t=>({c,t}))).find(x=>x.t.status==='ahead')||data.courses.flatMap(c=>c.topics.map(t=>({c,t}))).find(x=>x.t.status!=='completed');
+ document.getElementById('timeResult').innerHTML=`<div class="card"><span class="badge purple">Best use of ${min} min</span><h3>${candidate?esc(candidate.t.name):'Build your course roadmap'}</h3><p>${candidate?`From ${esc(candidate.c.code)}. ${candidate.t.status==='ahead'?'This keeps you ahead of class.':'We will start from the basics if needed.'}`:'Add an outline first so StudyFlow knows what matters next.'}</p><button class="full" onclick="${candidate?'startSession()':'closeModal(\\'timeModal\\')'}">${candidate?'Start session':'Go to courses'}</button></div>`;
+}
+function openLearnAhead(){document.getElementById('learnModal').classList.add('open');renderLearnChoices()}
+function openLearnAheadFor(id){document.getElementById('learnModal').classList.add('open');renderLearnChoices(id)}
+function renderLearnChoices(pre){
+ const el=document.getElementById('learnChoices');
+ const cs=data.courses.filter(c=>c.topics.some(t=>t.status==='ahead'||t.status==='not'));
+ el.innerHTML=cs.length?cs.map(c=>{let t=c.topics.find(x=>x.status==='ahead')||c.topics.find(x=>x.status==='not');return `<div class="card"><div class="row"><div><h3>${esc(c.code)}</h3><div class="small">Next: ${esc(t.name)}</div></div><button onclick="startTopicByCourse(${c.id})">Start</button></div></div>`}).join(''):'<div class="empty">No Learn Ahead topic yet. Add course outlines first.</div>';
+}
+function startTopicByCourse(id){selectedCourse=data.courses.find(c=>c.id===id);closeModal('learnModal');startSession()}
+function startTopic(i){sessionTopic=selectedCourse.topics[i];startSession()}
+let sessionTopic=null;
+function startSession(){
+ if(!selectedCourse) selectedCourse=data.courses.find(c=>c.topics.some(t=>t.status==='ahead'||t.status==='not'));
+ if(!selectedCourse){closeModal('timeModal');show('courses');return}
+ sessionTopic=sessionTopic||selectedCourse.topics.find(t=>t.status==='ahead')||selectedCourse.topics.find(t=>t.status==='not');
+ if(!sessionTopic){alert('No unfinished topic found.');return}
+ closeModal('timeModal');closeModal('learnModal');seconds=selectedTime*60;sessionStep=0;
+ document.getElementById('sessionModal').classList.add('open');renderSession();
+ clearInterval(timerId);timerId=setInterval(()=>{seconds--;updateTimer();if(seconds<=0){clearInterval(timerId);document.getElementById('sessionBody').insertAdjacentHTML('afterbegin','<div class="card"><b>⏰ Time is up.</b><p>Finish the current thought, then mark what you still need to review.</p></div>')}},1000);
+}
+function updateTimer(){document.getElementById('timer').textContent=String(Math.floor(seconds/60)).padStart(2,'0')+':'+String(seconds%60).padStart(2,'0')}
+function renderSession(){
+ updateTimer();
+ const b=document.getElementById('sessionBody');
+ if(sessionStep===0){document.getElementById('sessionTitle').textContent='Start from where you are';b.innerHTML=`<p>Before we teach <b>${esc(sessionTopic.name)}</b>, tell StudyFlow how familiar you are.</p><div class="choice"><button onclick="beginLearn('know')">🟢 I know it</button><button onclick="beginLearn('little')">🟡 I know a little</button></div><button class="secondary full" onclick="beginLearn('new')">🔴 I'm completely new to it</button>`}
+ else if(sessionStep===1){document.getElementById('sessionTitle').textContent='Understand';b.innerHTML=`<div class="card"><span class="badge purple">Beginner-friendly</span><h3>What is ${esc(sessionTopic.name)}?</h3><p>${topicExplain(sessionTopic.name)}</p><p><b>Key idea:</b> First understand the main idea. Then connect it to an example before trying to recall it.</p></div><button class="full" onclick="sessionStep=2;renderSession()">I understand enough →</button>`}
+ else if(sessionStep===2){document.getElementById('sessionTitle').textContent='Guided recall';b.innerHTML=`<p>Don't worry about perfect wording. Use what you just learned.</p><div class="card"><b>Explain the topic in your own words.</b><p class="small">Include: what it is, why it matters, and one example if you can.</p><textarea id="answer" placeholder="Write what you understand..."></textarea><button class="full" onclick="checkAnswer()">Check my understanding</button><div id="feedback"></div></div>`}
+ else if(sessionStep===3){document.getElementById('sessionTitle').textContent='Practice';b.innerHTML=`<div class="card"><b>Quick practice</b><p>Give yourself one minute to answer this without looking back:</p><p><b>What is the most important idea you should remember from ${esc(sessionTopic.name)}?</b></p><textarea id="practice" placeholder="Your answer..."></textarea><button class="full" onclick="finishPractice()">Submit practice</button></div>`}
+}
+function beginLearn(level){sessionStep=1;renderSession()}
+function checkAnswer(){
+ const a=(document.getElementById('answer').value||'').trim();
+ const fb=document.getElementById('feedback');
+ if(a.length<25){fb.innerHTML='<div class="card" style="background:#fff7ed;border-color:#fed7aa"><b>Not quite yet.</b><p>That is too short to show your understanding. Try explaining the idea in 2–4 sentences.</p></div>';return}
+ fb.innerHTML='<div class="card" style="background:#ecfdf3;border-color:#abefc6"><b>Good attempt.</b><p>Your explanation is detailed enough to continue. In the full version, AI will compare your answer against the actual course material and point out missing or incorrect ideas.</p></div><button class="full" onclick="sessionStep=3;renderSession()">Continue to practice →</button>';
+}
+function finishPractice(){
+ const a=(document.getElementById('practice').value||'').trim();
+ if(a.length<15){alert('Try answering in at least one or two complete sentences.');return}
+ sessionTopic.status='completed';persist();sessionStep=4;
+ document.getElementById('sessionTitle').textContent='Session complete 🎉';
+ document.getElementById('sessionBody').innerHTML=`<div class="card hero"><h2>Nice work.</h2><p>You didn't just read the topic — you practiced retrieving it.</p><button onclick="closeSession()">Done</button></div><div class="card"><h3>Next move</h3><p>${getNextAfter(sessionTopic)}</p></div>`;
+}
+function getNextAfter(t){const c=selectedCourse;let idx=c.topics.indexOf(t);let n=c.topics[idx+1];return n?`Next recommended: <b>${esc(n.name)}</b>. You can learn ahead before class.`:'You have reached the end of this roadmap. Time for review and practice.'}
+function closeSession(){clearInterval(timerId);document.getElementById('sessionModal').classList.remove('open');sessionTopic=null;show('courseDetail')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function topicExplain(name){
+ const n=name.toLowerCase();
+ if(n.includes('electron'))return 'Electrons are tiny negatively charged particles around an atom’s nucleus. The electrons involved in bonding strongly influence how atoms interact and form compounds.';
+ if(n.includes('petroleum'))return 'Petroleum engineering applies science and engineering to finding, evaluating, developing and producing hydrocarbons from underground reservoirs.';
+ if(n.includes('geology'))return 'Petroleum geology studies how rocks, structures and Earth processes create, store and trap hydrocarbons that can accumulate in reservoirs.';
+ if(n.includes('exploration'))return 'Exploration is the process of searching for subsurface accumulations of hydrocarbons using geological and geophysical evidence before drilling decisions are made.';
+ if(n.includes('reservoir'))return 'A reservoir is a subsurface rock formation that contains fluids and has properties that allow hydrocarbons to be stored and potentially produced.';
+ if(n.includes('drilling'))return 'Drilling creates a wellbore through the subsurface to reach a target formation and provide access for evaluation or production.';
+ if(n.includes('production'))return 'Production is the stage where hydrocarbons are brought from a reservoir to the surface and handled through the production system.';
+ return `Start with the basic definition of <b>${esc(name)}</b>, then learn its main parts, why it matters, and one concrete example. StudyFlow will use your course material for the full explanation.`;
+}
+const oldRender=render;
+render=function(){oldRender();if(document.getElementById('courseDetail').classList.contains('active'))renderDetail()};
+render();
+</script>
+</body>
+</html>
